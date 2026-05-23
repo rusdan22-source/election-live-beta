@@ -611,7 +611,7 @@ if (seggioValido === false) {
 
       <main className="min-h-screen bg-black text-white p-6">
 
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-5xl px-2 mx-auto">
 
           {/* FEEDBACK */}
 
@@ -624,7 +624,7 @@ if (seggioValido === false) {
               p-8
               mb-8
               text-center
-              text-4xl
+              text-3xl
               font-black
             ">
               ✅ SCHEDA SALVATA
@@ -637,7 +637,7 @@ if (seggioValido === false) {
           <div className="mb-12">
 
             <h1 className="
-  text-4xl
+  text-3xl
   md:text-7xl
   font-black
   mb-3
@@ -704,7 +704,7 @@ if (seggioValido === false) {
                   Candidato Sindaco
                 </p>
 
-                <h2 className="text-3xl md:text-5xl font-black leading-tight">
+                <h2 className="text-2xl md:text-5xl font-black leading-tight">
                   {sindaco.nome}
                 </h2>
 
@@ -744,7 +744,7 @@ if (seggioValido === false) {
                 Scheda
               </p>
 
-              <h2 className="text-3xl md:text-5xl font-black">
+              <h2 className="text-2xl md:text-5xl font-black">
                 BIANCA
               </h2>
 
@@ -776,7 +776,7 @@ if (seggioValido === false) {
                 Scheda
               </p>
 
-              <h2 className="text-3xl md:text-5xl font-black">
+              <h2 className="text-2xl md:text-5xl font-black">
                 NULLA
               </h2>
 
@@ -834,7 +834,7 @@ if (seggioValido === false) {
 
       <main className="min-h-screen bg-black text-white p-6">
 
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-5xl px-2 mx-auto">
 
           {/* HEADER */}
 
@@ -915,7 +915,7 @@ if (seggioValido === false) {
                   </p>
 
                   <h2 className="
-                    text-3xl md:text-5xl
+                    text-2xl md:text-5xl
                     font-black
                     leading-tight
                     mb-6
@@ -926,7 +926,7 @@ if (seggioValido === false) {
                   {selezionata && (
 
                     <div className="
-                      text-3xl
+                      text-2xl
                       font-black
                     ">
                       ✅ SELEZIONATA
@@ -1009,7 +1009,7 @@ if (seggioValido === false) {
 
     <main className="min-h-screen bg-black text-white p-6">
 
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl px-2 mx-auto">
 
         {/* HEADER */}
 
@@ -1030,7 +1030,7 @@ if (seggioValido === false) {
             Lista selezionata
           </p>
 
-          <h1 className="text-3xl md:text-5xl font-black">
+          <h1 className="text-2xl md:text-5xl font-black">
             {listaScelta?.nome}
           </h1>
 
@@ -1197,7 +1197,7 @@ if (seggioValido === false) {
                   {selezionato && (
 
                     <div className="
-                      text-4xl
+                      text-3xl
                       font-black
                     ">
                       ✅
