@@ -1,337 +1,178 @@
-'use client'
-
-import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
-
-type Sindaco = {
-  id: number
-  nome: string
-  colore: string
-}
-
-type Lista = {
-  id: number
-  nome: string
-  colore: string
-  sindaco_id: number
-}
-
-export default function ScrutinioPage() {
-
-  // =========================
-  // STATE
-  // =========================
-
-  const [step, setStep] = useState(1)
-
-  const [sindaci, setSindaci] = useState<Sindaco[]>([])
-
-  const [liste, setListe] = useState<Lista[]>([])
-
-  const [sindacoScelto, setSindacoScelto] =
-    useState<Sindaco | null>(null)
-
-  // =========================
-  // LOAD
-  // =========================
-
-  async function caricaDati() {
-
-    const sindaciQuery = await supabase
-      .from('sindaci')
-      .select('*')
-
-    const listeQuery = await supabase
-      .from('liste')
-      .select('*')
-
-    if (sindaciQuery.data) {
-      setSindaci(sindaciQuery.data)
-    }
-
-    if (listeQuery.data) {
-      setListe(listeQuery.data)
-    }
-  }
-
-  useEffect(() => {
-    caricaDati()
-  }, [])
-
-  // =========================
-  // SCHEDE SPECIALI
-  // =========================
-
-  async function salvaSchedaSpeciale(
-    tipo: 'bianca' | 'nulla'
-  ) {
-
-    const { error } = await supabase
-
-      .from('schede_scrutinate')
-
-      .insert({
-        seggio_id: 1,
-        tipo
-      })
-
-    if (error) {
-      console.error(error)
-      return
-    }
-
-    alert(`Scheda ${tipo} salvata`)
-  }
-
-  // =========================
-  // STEP 1
-  // =========================
-
-  if (step === 1) {
-
-    return (
-
-      <main className="min-h-screen bg-black text-white p-6">
-
-        <div className="max-w-5xl mx-auto">
-
-          <div className="mb-12">
-
-            <h1 className="text-7xl font-black mb-3">
-              SEGGIO 1
-            </h1>
-
-            <p className="text-zinc-500 text-2xl">
-              Seleziona il tipo di scheda
-            </p>
-
-          </div>
-
-          {/* SINDACI */}
-
-          <div className="grid md:grid-cols-2 gap-6 mb-10">
-
-            {sindaci.map((sindaco) => (
-
-              <button
-
-                key={sindaco.id}
-
-                onClick={() => {
-
-                  setSindacoScelto(sindaco)
-
-                  setStep(2)
-                }}
-
-                className="
-                  rounded-3xl
-                  p-10
-                  text-left
-                  transition-all
-                  hover:scale-[1.02]
-                "
-
-                style={{
-                  background: sindaco.colore
-                }}
-              >
-
-                <p className="text-lg opacity-80 mb-3">
-                  Candidato Sindaco
-                </p>
-
-                <h2 className="text-5xl font-black leading-tight">
-                  {sindaco.nome}
-                </h2>
-
-              </button>
-
-            ))}
-
-          </div>
-
-          {/* BIANCA / NULLA */}
-
-          <div className="grid md:grid-cols-2 gap-6">
-
-            {/* BIANCA */}
-
-            <button
-
-              onClick={() =>
-                salvaSchedaSpeciale('bianca')
-              }
-
-              className="
-                bg-white
-                text-black
-                rounded-3xl
-                p-10
-                text-left
-                transition-all
-                hover:scale-[1.02]
-              "
-            >
-
-              <p className="text-lg opacity-70 mb-3">
-                Scheda
-              </p>
-
-              <h2 className="text-5xl font-black">
-                BIANCA
-              </h2>
-
-            </button>
-
-            {/* NULLA */}
-
-            <button
-
-              onClick={() =>
-                salvaSchedaSpeciale('nulla')
-              }
-
-              className="
-                bg-zinc-800
-                text-white
-                rounded-3xl
-                p-10
-                text-left
-                transition-all
-                hover:scale-[1.02]
-              "
-            >
-
-              <p className="text-lg opacity-70 mb-3">
-                Scheda
-              </p>
-
-              <h2 className="text-5xl font-black">
-                NULLA
-              </h2>
-
-            </button>
-
-          </div>
-
-        </div>
-
-      </main>
-    )
-  }
-
-  // =========================
-  // STEP 2
-  // =========================
+export default function HomePage() {
 
   return (
 
-    <main className="min-h-screen bg-black text-white p-6">
+    <main className="
+      min-h-screen
+      bg-black
+      text-white
+      flex
+      items-center
+      justify-center
+      p-6
+    ">
 
-      <div className="max-w-5xl mx-auto">
+      <div className="
+        max-w-4xl
+        w-full
+        text-center
+      ">
 
-        {/* HEADER */}
+        {/* LOGO / TITLE */}
 
-        <div
-          className="
-            rounded-3xl
-            p-6
-            mb-10
-          "
+        <div className="mb-10">
 
-          style={{
-            background: sindacoScelto?.colore
-          }}
-        >
+          <div className="
+            inline-flex
+            items-center
+            gap-4
+            mb-6
+          ">
 
-          <p className="text-lg opacity-80 mb-2">
-            Sindaco selezionato
-          </p>
+            <div className="
+              relative
+              flex
+              items-center
+              justify-center
+            ">
 
-          <h1 className="text-5xl font-black">
-            {sindacoScelto?.nome}
+              <div className="
+                absolute
+                w-8
+                h-8
+                rounded-full
+                bg-red-500/30
+                animate-ping
+              " />
+
+              <div className="
+                w-5
+                h-5
+                rounded-full
+                bg-red-500
+              " />
+
+            </div>
+
+            <span className="
+              text-sm
+              md:text-base
+              font-black
+              tracking-[0.3em]
+              text-red-500
+            ">
+              BETA
+            </span>
+
+          </div>
+
+          <h1 className="
+            text-4xl
+            md:text-7xl
+            font-black
+            leading-tight
+            mb-6
+          ">
+
+            ELECTION LIVE
+
           </h1>
+
+          <p className="
+            text-xl
+            md:text-2xl
+            text-zinc-400
+            leading-relaxed
+            max-w-3xl
+            mx-auto
+          ">
+
+            Sistema sperimentale di scrutinio
+            elettorale in tempo reale,
+            progettato per mostrare risultati,
+            aggiornamenti live e statistiche
+            durante lo spoglio.
+
+          </p>
 
         </div>
 
-        {/* LISTE */}
+        {/* INFO CARD */}
 
-        <div className="grid md:grid-cols-2 gap-6 mb-10">
+        <div className="
+          bg-zinc-900
+          border
+          border-zinc-800
+          rounded-3xl
+          p-6
+          md:p-10
+          mb-8
+          text-left
+        ">
 
-          {liste.map((lista) => (
+          <h2 className="
+            text-2xl
+            md:text-4xl
+            font-black
+            mb-6
+          ">
 
-            <button
+            Progetto in evoluzione
 
-              key={lista.id}
+          </h2>
 
-              className="
-                rounded-3xl
-                p-10
-                text-left
-                transition-all
-                hover:scale-[1.02]
-              "
+          <div className="
+            grid
+            gap-5
+            text-zinc-300
+            text-lg
+            md:text-xl
+            leading-relaxed
+          ">
 
-              style={{
-                background: lista.colore
-              }}
-            >
+            <p>
 
-              <p className="text-lg opacity-80 mb-3">
-                Lista
-              </p>
+              Questa piattaforma rappresenta
+              una beta pubblica di un progetto
+              più ampio dedicato alla gestione
+              e visualizzazione dello scrutinio
+              elettorale in tempo reale.
 
-              <h2 className="text-5xl font-black leading-tight">
-                {lista.nome}
-              </h2>
+            </p>
 
-            </button>
+            <p>
 
-          ))}
+              L'obiettivo è sviluppare un sistema
+              moderno, rapido e trasparente,
+              pensato sia per operatori interni
+              che per la visualizzazione live
+              dei risultati.
+
+            </p>
+
+            <p>
+
+              Nuove funzionalità, miglioramenti
+              grafici e aggiornamenti arriveranno
+              progressivamente nelle prossime
+              versioni.
+
+            </p>
+
+          </div>
 
         </div>
 
         {/* FOOTER */}
 
-        <div className="flex gap-4">
+        <div className="
+          text-zinc-500
+          text-sm
+          md:text-base
+        ">
 
-          <button
-
-            onClick={() => {
-
-              setSindacoScelto(null)
-
-              setStep(1)
-            }}
-
-            className="
-              flex-1
-              bg-orange-500
-              text-white
-              rounded-3xl
-              p-6
-              text-3xl
-              font-black
-            "
-          >
-            ANNULLA
-          </button>
-
-          <button
-
-            className="
-              flex-1
-              bg-green-600
-              text-white
-              rounded-3xl
-              p-6
-              text-3xl
-              font-black
-            "
-          >
-            CONTINUA
-          </button>
+          Rimani sintonizzato per i prossimi
+          aggiornamenti del progetto.
 
         </div>
 
