@@ -636,7 +636,12 @@ if (seggioValido === false) {
 
           <div className="mb-12">
 
-            <h1 className="text-7xl font-black mb-3">
+            <h1 className="
+  text-4xl
+  md:text-7xl
+  font-black
+  mb-3
+">
               SEGGIO {seggioId}
             </h1>
             
@@ -684,7 +689,7 @@ if (seggioValido === false) {
 
                 className="
                   rounded-3xl
-                  p-10
+                  p-5 md:p-10
                   text-left
                   transition-all
                   hover:scale-[1.02]
@@ -699,7 +704,7 @@ if (seggioValido === false) {
                   Candidato Sindaco
                 </p>
 
-                <h2 className="text-5xl font-black leading-tight">
+                <h2 className="text-3xl md:text-5xl font-black leading-tight">
                   {sindaco.nome}
                 </h2>
 
@@ -727,7 +732,7 @@ if (seggioValido === false) {
                 bg-white
                 text-black
                 rounded-3xl
-                p-10
+                p-5 md:p-10
                 text-left
                 transition-all
                 hover:scale-[1.02]
@@ -739,7 +744,7 @@ if (seggioValido === false) {
                 Scheda
               </p>
 
-              <h2 className="text-5xl font-black">
+              <h2 className="text-3xl md:text-5xl font-black">
                 BIANCA
               </h2>
 
@@ -759,7 +764,7 @@ if (seggioValido === false) {
                 bg-zinc-800
                 text-white
                 rounded-3xl
-                p-10
+                p-5 md:p-10
                 text-left
                 transition-all
                 hover:scale-[1.02]
@@ -771,7 +776,7 @@ if (seggioValido === false) {
                 Scheda
               </p>
 
-              <h2 className="text-5xl font-black">
+              <h2 className="text-3xl md:text-5xl font-black">
                 NULLA
               </h2>
 
@@ -850,7 +855,11 @@ if (seggioValido === false) {
               Sindaco selezionato
             </p>
 
-            <h1 className="text-5xl font-black">
+            <h1 className="
+  text-3xl
+  md:text-5xl
+  font-black
+">
               {sindacoScelto?.nome}
             </h1>
 
@@ -877,7 +886,7 @@ if (seggioValido === false) {
 
                   className="
                     rounded-3xl
-                    p-10
+                    p-5 md:p-10
                     text-left
                     transition-all
                   "
@@ -906,7 +915,7 @@ if (seggioValido === false) {
                   </p>
 
                   <h2 className="
-                    text-5xl
+                    text-3xl md:text-5xl
                     font-black
                     leading-tight
                     mb-6
@@ -933,7 +942,12 @@ if (seggioValido === false) {
 
           {/* FOOTER */}
 
-          <div className="flex gap-4">
+          <div className="
+  flex
+  flex-col
+  md:flex-row
+  gap-4
+">
 
             <button
 
@@ -1003,7 +1017,7 @@ if (seggioValido === false) {
 
           className="
             rounded-3xl
-            p-6
+            p-3 md:p-6
             mb-6
           "
 
@@ -1016,7 +1030,7 @@ if (seggioValido === false) {
             Lista selezionata
           </p>
 
-          <h1 className="text-5xl font-black">
+          <h1 className="text-3xl md:text-5xl font-black">
             {listaScelta?.nome}
           </h1>
 
@@ -1024,7 +1038,13 @@ if (seggioValido === false) {
 
         {/* TOP ACTIONS */}
 
-        <div className="flex gap-4 mb-8">
+        <div className="
+  flex
+  flex-col
+  md:flex-row
+  gap-4
+  mb-8
+">
 
           {/* TORNA STEP 2 */}
 
@@ -1166,7 +1186,7 @@ if (seggioValido === false) {
                     </p>
 
                     <h2 className="
-                      text-3xl
+                      text-2xl md:text-3xl
                       font-black
                     ">
                       {candidato.nome}
