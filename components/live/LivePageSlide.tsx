@@ -72,7 +72,7 @@ function Card({
     )
   }
 
-  // CARD SPLIT
+  // CARD SPLIT (RIPRISTINATA)
 
   return (
 
@@ -82,9 +82,6 @@ function Card({
         rounded-3xl
         p-4
         min-h-[120px]
-        flex
-        flex-col
-        justify-center
       "
 
       style={{
@@ -99,17 +96,66 @@ function Card({
         text-base
         xl:text-lg
         opacity-70
-        mb-3
+        mb-4
       ">
         {title}
       </p>
 
       <div className="
-        text-3xl
-        xl:text-5xl
-        font-black
+        flex
+        items-center
+        justify-between
+        gap-6
       ">
-        {value}
+
+        {/* VOTI */}
+
+        <div>
+
+          <div className="
+            text-3xl
+            xl:text-5xl
+            font-black
+            leading-none
+          ">
+            {value}
+          </div>
+
+          <div className="
+            text-base
+            opacity-80
+            mt-2
+          ">
+            voti
+          </div>
+
+        </div>
+
+        {/* DIVIDER */}
+
+        <div className="
+          w-[2px]
+          self-stretch
+          bg-black/30
+        " />
+
+        {/* PERCENTUALE */}
+
+        <div className="
+          text-right
+        ">
+
+          <div className="
+            text-4xl
+            xl:text-6xl
+            font-black
+            leading-none
+          ">
+            {percentuale.toFixed(1)}%
+          </div>
+
+        </div>
+
       </div>
 
     </div>
@@ -314,12 +360,38 @@ export default function LivePageSlide({
             <Card
               title="Lista 1 - Polizzi Futura"
               value={totali.lista1}
+
+              percentuale={
+
+                totali.valide > 0
+
+                  ? (
+                      totali.lista1 /
+                      totali.valide
+                    ) * 100
+
+                  : 0
+              }
+
               color="#14532D"
             />
 
             <Card
               title="Lista 2 - Costruire Comunità"
               value={totali.lista2}
+
+              percentuale={
+
+                totali.valide > 0
+
+                  ? (
+                      totali.lista2 /
+                      totali.valide
+                    ) * 100
+
+                  : 0
+              }
+
               color="#991B1B"
             />
 
@@ -399,7 +471,7 @@ export default function LivePageSlide({
                       text-lg
                       font-black
                     ">
-                      {sezione.nome}
+                      Sezione {sezione.id}
                     </h2>
 
                     <div className="
@@ -617,8 +689,6 @@ export default function LivePageSlide({
                       "
                     >
 
-                      {/* SINISTRA */}
-
                       <div
 
                         className="
@@ -653,7 +723,7 @@ export default function LivePageSlide({
                             font-black
                             text-xs
                           ">
-                            {scheda.sezione?.nome}
+                            Sezione {scheda.seggio_id}
                           </div>
 
                           <div className="
@@ -675,8 +745,6 @@ export default function LivePageSlide({
                         </div>
 
                       </div>
-
-                      {/* DESTRA */}
 
                       <div
 
