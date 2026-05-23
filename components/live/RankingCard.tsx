@@ -37,12 +37,17 @@ export default function RankingCard({
       }}
     >
 
+      {/* SINISTRA */}
+
       <div className="
         flex
         items-center
         gap-4
         min-w-0
+        flex-1
       ">
+
+        {/* POSIZIONE */}
 
         <div className="
           w-12
@@ -52,28 +57,34 @@ export default function RankingCard({
           flex
           items-center
           justify-center
-          text-xl
+          text-lg
+          xl:text-xl
           font-black
           shrink-0
         ">
           {index}
         </div>
 
+        {/* NOME */}
+
         <h2 className="
-          text-xl
+          text-lg
           xl:text-2xl
           font-black
           leading-tight
           break-words
-          pr-4
+          min-w-0
         ">
           {candidato.nome}
         </h2>
 
       </div>
 
+      {/* VOTI */}
+
       <div className="
-        text-4xl
+        text-3xl
+        xl:text-4xl
         font-black
         shrink-0
       ">

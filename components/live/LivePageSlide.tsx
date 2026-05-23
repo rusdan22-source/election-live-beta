@@ -1,5 +1,3 @@
-import RankingCard from './RankingCard'
-
 type Props = {
 
   totali: any
@@ -54,7 +52,8 @@ function Card({
       >
 
         <p className="
-          text-lg
+          text-base
+          xl:text-lg
           opacity-70
           mb-2
         ">
@@ -62,7 +61,7 @@ function Card({
         </p>
 
         <h2 className="
-          text-4xl
+          text-3xl
           xl:text-5xl
           font-black
         ">
@@ -85,7 +84,7 @@ function Card({
         min-h-[120px]
         flex
         flex-col
-        justify-between
+        justify-center
       "
 
       style={{
@@ -97,7 +96,8 @@ function Card({
     >
 
       <p className="
-        text-lg
+        text-base
+        xl:text-lg
         opacity-70
         mb-3
       ">
@@ -105,74 +105,16 @@ function Card({
       </p>
 
       <div className="
-        flex
-        items-center
-        justify-between
-        gap-4
+        text-3xl
+        xl:text-5xl
+        font-black
       ">
-
-        {/* VOTI */}
-
-        <div className="
-          flex-1
-        ">
-
-          <div className="
-            text-4xl
-            xl:text-5xl
-            font-black
-          ">
-            {value}
-          </div>
-
-          <div className="
-            text-sm
-            opacity-70
-            mt-1
-          ">
-            voti
-          </div>
-
-        </div>
-
-        {/* DIVISORE */}
-
-        <div
-
-          className="
-            w-[2px]
-            bg-black/40
-            rounded-full
-          "
-
-          style={{
-            height: '80px'
-          }}
-        />
-
-        {/* PERCENTUALE */}
-
-        <div className="
-          flex-1
-          text-right
-        ">
-
-          <div className="
-            text-4xl
-            xl:text-5xl
-            font-black
-          ">
-            {percentuale}%
-          </div>
-
-        </div>
-
+        {value}
       </div>
 
     </div>
   )
 }
-
 
 function SindacoCard({
 
@@ -201,7 +143,7 @@ function SindacoCard({
     >
 
       <p className="
-        text-2xl
+        text-xl
         opacity-80
         mb-3
       ">
@@ -209,7 +151,7 @@ function SindacoCard({
       </p>
 
       <h2 className="
-        text-6xl
+        text-5xl
         xl:text-7xl
         font-black
         mb-4
@@ -240,7 +182,7 @@ function SindacoCard({
       </div>
 
       <p className="
-        text-2xl
+        text-xl
         font-black
         mt-3
       ">
@@ -277,7 +219,7 @@ export default function LivePageSlide({
       ">
 
         <h1 className="
-          text-5xl
+          text-4xl
           xl:text-6xl
           font-black
         ">
@@ -311,8 +253,6 @@ export default function LivePageSlide({
 
       </div>
 
-      
-
       {/* CONTENT */}
 
       <div className="
@@ -326,41 +266,42 @@ export default function LivePageSlide({
 
         <div>
 
-        {/* TOP */}
+          {/* TOP */}
 
-      <div className="
-        grid
-        grid-cols-4
-        gap-3
-        mb-3
-      ">
+          <div className="
+            grid
+            grid-cols-4
+            gap-3
+            mb-3
+          ">
 
-        <Card
-          title="Totale schede scrutinate"
-          value={totali.totale}
-          color="#18181B"
-        />
+            <Card
+              title="Totale schede scrutinate"
+              value={totali.totale}
+              color="#18181B"
+            />
 
-        <Card
-          title="Schede valide"
-          value={totali.valide}
-          color="#1D4ED8"
-        />
+            <Card
+              title="Schede valide"
+              value={totali.valide}
+              color="#1D4ED8"
+            />
 
-        <Card
-          title="Schede bianche"
-          value={totali.bianche}
-          color="#FFFFFF"
-          dark
-        />
+            <Card
+              title="Schede bianche"
+              value={totali.bianche}
+              color="#FFFFFF"
+              dark
+            />
 
-        <Card
-          title="Schede nulle"
-          value={totali.nulle}
-          color="#3F3F46"
-        />
+            <Card
+              title="Schede nulle"
+              value={totali.nulle}
+              color="#3F3F46"
+            />
 
-      </div>
+          </div>
+
           {/* LISTE */}
 
           <div className="
@@ -373,46 +314,18 @@ export default function LivePageSlide({
             <Card
               title="Lista 1 - Polizzi Futura"
               value={totali.lista1}
-
-              percentuale={
-                totali.valide > 0
-
-                  ? (
-                      (
-                        totali.lista1 /
-                        totali.valide
-                      ) * 100
-                    ).toFixed(1)
-
-                  : '0.0'
-              }
-
               color="#14532D"
             />
 
             <Card
               title="Lista 2 - Costruire Comunità"
               value={totali.lista2}
-
-              percentuale={
-                totali.valide > 0
-
-                  ? (
-                      (
-                        totali.lista2 /
-                        totali.valide
-                      ) * 100
-                    ).toFixed(1)
-
-                  : '0.0'
-              }
-
               color="#991B1B"
             />
 
           </div>
 
-          {/* SEGGI */}
+          {/* SEZIONI */}
 
           <div className="
             grid
@@ -421,25 +334,25 @@ export default function LivePageSlide({
             mb-3
           ">
 
-            {seggi.map((seggio: any) => {
+            {seggi.map((sezione: any) => {
 
-              const schedeSeggio =
+              const schedeSezione =
 
                 totaliSchede.filter(
                   (s: any) =>
-                    s.seggio_id === seggio.id
+                    s.seggio_id === sezione.id
                 )
 
               const votiLoVerde =
 
-                schedeSeggio.filter(
+                schedeSezione.filter(
                   (s: any) =>
                     s.sindaco_id === 1
                 ).length
 
               const votiLibrizzi =
 
-                schedeSeggio.filter(
+                schedeSezione.filter(
                   (s: any) =>
                     s.sindaco_id === 2
                 ).length
@@ -461,7 +374,7 @@ export default function LivePageSlide({
 
                 <div
 
-                  key={seggio.id}
+                  key={sezione.id}
 
                   className="
                     rounded-3xl
@@ -486,16 +399,16 @@ export default function LivePageSlide({
                       text-lg
                       font-black
                     ">
-                      {seggio.nome}
+                      {sezione.nome}
                     </h2>
 
                     <div className="
                       text-sm
                       font-black
                     ">
-                      {seggio.scrutinate}
+                      {sezione.scrutinate}
                       /
-                      {seggio.totale_votanti}
+                      {sezione.totale_votanti}
                     </div>
 
                   </div>
@@ -517,7 +430,7 @@ export default function LivePageSlide({
                       "
 
                       style={{
-                        width: `${seggio.percentuale}%`,
+                        width: `${sezione.percentuale}%`,
                         background: colore
                       }}
                     />
@@ -541,7 +454,7 @@ export default function LivePageSlide({
                         color: colore
                       }}
                     >
-                      {seggio.percentuale.toFixed(1)}%
+                      {sezione.percentuale.toFixed(1)}%
                     </div>
 
                     <div
@@ -740,7 +653,7 @@ export default function LivePageSlide({
                             font-black
                             text-xs
                           ">
-                            {scheda.seggio?.nome}
+                            {scheda.sezione?.nome}
                           </div>
 
                           <div className="

@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase'
 
 export default function AdminPage() {
 
-  const [seggi, setSeggi] =
+  const [sezioni, setSezioni] =
     useState<any[]>([])
 
   const [loading, setLoading] =
@@ -24,34 +24,34 @@ export default function AdminPage() {
 
   async function caricaDati() {
 
-const impostazioniQuery = await supabase
+    const impostazioniQuery = await supabase
 
-  .from('impostazioni')
+      .from('impostazioni')
 
-  .select('*')
+      .select('*')
 
-  .single()
+      .single()
 
-if (impostazioniQuery.data) {
+    if (impostazioniQuery.data) {
 
-  setScrutinioAperto(
+      setScrutinioAperto(
 
-    impostazioniQuery.data
-      .scrutinio_aperto
-  )
-}
+        impostazioniQuery.data
+          .scrutinio_aperto
+      )
+    }
 
-    // SEGGI
+    // SEZIONI
 
-    const seggiQuery = await supabase
+    const sezioniQuery = await supabase
 
       .from('seggi')
 
       .select('*')
       .order('id')
 
-    setSeggi(
-      seggiQuery.data || []
+    setSezioni(
+      sezioniQuery.data || []
     )
 
     // ULTIMA MODIFICA
@@ -96,11 +96,11 @@ if (impostazioniQuery.data) {
   // SALVA TOTALI
   // =====================================
 
-  async function salvaSeggi() {
+  async function salvaSezioni() {
 
     setLoading(true)
 
-    for (const seggio of seggi) {
+    for (const sezione of sezioni) {
 
       await supabase
 
@@ -111,16 +111,16 @@ if (impostazioniQuery.data) {
           totale_votanti:
 
             Number(
-              seggio.totale_votanti
+              sezione.totale_votanti
             )
         })
 
-        .eq('id', seggio.id)
+        .eq('id', sezione.id)
     }
 
     setLoading(false)
 
-    alert('Totali seggi aggiornati 😄')
+    alert('Totali sezioni aggiornati 😄')
   }
 
   // =====================================
@@ -167,30 +167,34 @@ if (impostazioniQuery.data) {
   }
 
   // =====================================
-  // UI
+  // TOGGLE SCRUTINIO
   // =====================================
 
-async function toggleScrutinio() {
+  async function toggleScrutinio() {
 
-  const nuovoStato =
-    !scrutinioAperto
+    const nuovoStato =
+      !scrutinioAperto
 
-  await supabase
+    await supabase
 
-    .from('impostazioni')
+      .from('impostazioni')
 
-    .update({
+      .update({
 
-      scrutinio_aperto:
-        nuovoStato
-    })
+        scrutinio_aperto:
+          nuovoStato
+      })
 
-    .eq('id', 1)
+      .eq('id', 1)
 
-  setScrutinioAperto(
-    nuovoStato
-  )
-}
+    setScrutinioAperto(
+      nuovoStato
+    )
+  }
+
+  // =====================================
+  // UI
+  // =====================================
 
   return (
 
@@ -198,22 +202,26 @@ async function toggleScrutinio() {
       min-h-screen
       bg-black
       text-white
-      p-6
+      p-4 md:p-6
     ">
 
       {/* HEADER */}
 
       <div className="
         flex
-        items-center
-        justify-between
+        flex-col
+        md:flex-row
+        md:items-center
+        md:justify-between
+        gap-6
         mb-8
       ">
 
         <div>
 
           <h1 className="
-            text-5xl
+            text-3xl
+            md:text-5xl
             font-black
           ">
             ADMIN PANEL
@@ -222,6 +230,8 @@ async function toggleScrutinio() {
           <p className="
             text-zinc-400
             mt-2
+            text-base
+            md:text-lg
           ">
             Gestione scrutinio live
           </p>
@@ -229,7 +239,7 @@ async function toggleScrutinio() {
         </div>
 
         <div className="
-          text-right
+          md:text-right
         ">
 
           <p className="
@@ -240,7 +250,8 @@ async function toggleScrutinio() {
           </p>
 
           <p className="
-            text-2xl
+            text-xl
+            md:text-2xl
             font-black
           ">
             {ultimaModifica}
@@ -256,65 +267,70 @@ async function toggleScrutinio() {
         mb-8
       ">
 
-<button
+        <button
 
-  onClick={toggleScrutinio}
+          onClick={toggleScrutinio}
 
-  className={`
-    rounded-3xl
-    px-6
-    py-4
-    text-2xl
-    font-black
+          className={`
+            w-full
+            md:w-auto
+            rounded-3xl
+            px-6
+            py-4
+            text-xl
+            md:text-2xl
+            font-black
 
-    ${scrutinioAperto
+            ${scrutinioAperto
 
-      ? 'bg-green-600'
+              ? 'bg-green-600'
 
-      : 'bg-red-600'
-    }
-  `}
->
+              : 'bg-red-600'
+            }
+          `}
+        >
 
-  {scrutinioAperto
+          {scrutinioAperto
 
-    ? 'SCRUTINIO APERTO'
+            ? 'SCRUTINIO APERTO'
 
-    : 'SCRUTINIO CHIUSO'
-  }
+            : 'SCRUTINIO CHIUSO'
+          }
 
-</button>
+        </button>
 
       </div>
 
-      {/* SEGGI */}
+      {/* SEZIONI */}
 
       <div className="
         grid
-        grid-cols-2
+        grid-cols-1
+        md:grid-cols-2
         gap-4
         mb-8
       ">
 
-        {seggi.map((seggio: any) => (
+        {sezioni.map((sezione: any) => (
 
           <div
 
-            key={seggio.id}
+            key={sezione.id}
 
             className="
               bg-zinc-900
               rounded-3xl
-              p-5
+              p-4 md:p-5
             "
           >
 
             <h2 className="
-              text-3xl
+              text-2xl
+              md:text-3xl
               font-black
               mb-4
             ">
-              {seggio.nome}
+              {sezione.nome}
             </h2>
 
             <p className="
@@ -329,16 +345,16 @@ async function toggleScrutinio() {
               type="number"
 
               value={
-                seggio.totale_votanti || ''
+                sezione.totale_votanti || ''
               }
 
               onChange={(e) => {
 
-                setSeggi(
+                setSezioni(
 
-                  seggi.map((s) =>
+                  sezioni.map((s) =>
 
-                    s.id === seggio.id
+                    s.id === sezione.id
 
                       ? {
 
@@ -361,7 +377,8 @@ async function toggleScrutinio() {
                 border-zinc-700
                 rounded-2xl
                 p-4
-                text-3xl
+                text-2xl
+                md:text-3xl
                 font-black
                 outline-none
               "
@@ -376,7 +393,10 @@ async function toggleScrutinio() {
 
       <div className="
         flex
-        items-center
+        flex-col
+        md:flex-row
+        items-stretch
+        md:items-center
         gap-4
       ">
 
@@ -384,17 +404,19 @@ async function toggleScrutinio() {
 
         <button
 
-          onClick={salvaSeggi}
+          onClick={salvaSezioni}
 
           disabled={loading}
 
           className="
+            flex-1
             bg-green-700
             hover:bg-green-600
             rounded-2xl
             px-8
             py-5
-            text-2xl
+            text-xl
+            md:text-2xl
             font-black
           "
         >
@@ -410,12 +432,14 @@ async function toggleScrutinio() {
           disabled={loading}
 
           className="
+            flex-1
             bg-red-700
             hover:bg-red-600
             rounded-2xl
             px-8
             py-5
-            text-2xl
+            text-xl
+            md:text-2xl
             font-black
           "
         >

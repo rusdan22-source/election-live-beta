@@ -32,252 +32,252 @@ type Candidato = {
 // PAGE
 // =====================================
 
-export default function SeggioPage() {
+export default function SezionePage() {
 
-// =====================================
-// URL PARAM
-// =====================================
+  // =====================================
+  // URL PARAM
+  // =====================================
 
-const [seggioId, setSeggioId] =
-  useState<number | null>(null)
+  const [sezioneId, setSezioneId] =
+    useState<number | null>(null)
 
-const [seggioValido, setSeggioValido] =
-  useState<boolean | null>(null)
+  const [sezioneValida, setSezioneValida] =
+    useState<boolean | null>(null)
 
-// =====================================
-// STATE
-// =====================================
+  // =====================================
+  // STATE
+  // =====================================
 
-const [step, setStep] =
-  useState(1)
+  const [step, setStep] =
+    useState(1)
 
-const [loading, setLoading] =
-  useState(false)
+  const [loading, setLoading] =
+    useState(false)
 
-const [salvata, setSalvata] =
-  useState(false)
+  const [salvata, setSalvata] =
+    useState(false)
 
-const [sindaci, setSindaci] =
-  useState<Sindaco[]>([])
+  const [sindaci, setSindaci] =
+    useState<Sindaco[]>([])
 
-const [liste, setListe] =
-  useState<Lista[]>([])
+  const [liste, setListe] =
+    useState<Lista[]>([])
 
-const [candidati, setCandidati] =
-  useState<Candidato[]>([])
+  const [candidati, setCandidati] =
+    useState<Candidato[]>([])
 
-const [preferenze, setPreferenze] =
-  useState<Candidato[]>([])
+  const [preferenze, setPreferenze] =
+    useState<Candidato[]>([])
 
-const [sindacoScelto, setSindacoScelto] =
-  useState<Sindaco | null>(null)
+  const [sindacoScelto, setSindacoScelto] =
+    useState<Sindaco | null>(null)
 
-const [listaScelta, setListaScelta] =
-  useState<Lista | null>(null)
+  const [listaScelta, setListaScelta] =
+    useState<Lista | null>(null)
 
-const [scrutinioAperto, setScrutinioAperto] =
-  useState(true)
+  const [scrutinioAperto, setScrutinioAperto] =
+    useState(true)
 
-const [totaleVotanti, setTotaleVotanti] =
-  useState(0)
+  const [totaleVotanti, setTotaleVotanti] =
+    useState(0)
 
-const [schedeScrutinate, setSchedeScrutinate] =
-  useState(0)
+  const [schedeScrutinate, setSchedeScrutinate] =
+    useState(0)
 
-const [seggioCompletato, setSeggioCompletato] =
-  useState(false)
+  const [sezioneCompletata, setSezioneCompletata] =
+    useState(false)
 
-// =====================================
-// GET URL PARAM
-// =====================================
+  // =====================================
+  // GET URL PARAM
+  // =====================================
 
-useEffect(() => {
+  useEffect(() => {
 
-  const path =
-    window.location.pathname
+    const path =
+      window.location.pathname
 
-  const id =
-    path.split('/').pop()
+    const id =
+      path.split('/').pop()
 
-  setSeggioId(Number(id))
+    setSezioneId(Number(id))
 
-}, [])
+  }, [])
 
-// =====================================
-// LOAD DATA
-// =====================================
+  // =====================================
+  // LOAD DATA
+  // =====================================
 
-async function caricaDati() {
+  async function caricaDati() {
 
-  if (seggioId === null) return
+    if (sezioneId === null) return
 
-  // CHECK SEGGIO
+    // CHECK SEZIONE
 
-  const seggioQuery = await supabase
+    const sezioneQuery = await supabase
 
-    .from('seggi')
+      .from('seggi')
 
-    .select('*')
+      .select('*')
 
-    .eq('id', seggioId)
+      .eq('id', sezioneId)
 
-    .single()
+      .single()
 
-  if (seggioQuery.error) {
+    if (sezioneQuery.error) {
 
-    setSeggioValido(false)
+      setSezioneValida(false)
 
-    return
-  }
+      return
+    }
 
-  setSeggioValido(true)
+    setSezioneValida(true)
 
-  const seggio = seggioQuery.data
+    const sezione = sezioneQuery.data
 
-setTotaleVotanti(
-  seggio.totale_votanti || 0
-)
+    setTotaleVotanti(
+      sezione.totale_votanti || 0
+    )
 
-  // SINDACI
+    // SINDACI
 
-  const sindaciQuery = await supabase
+    const sindaciQuery = await supabase
 
-    .from('sindaci')
+      .from('sindaci')
 
-    .select('*')
+      .select('*')
 
-    .order('id')
+      .order('id')
 
-  if (sindaciQuery.data) {
+    if (sindaciQuery.data) {
 
-    setSindaci(
-      sindaciQuery.data
+      setSindaci(
+        sindaciQuery.data
+      )
+    }
+
+    // LISTE
+
+    const listeQuery = await supabase
+
+      .from('liste')
+
+      .select('*')
+
+      .order('numero')
+
+    if (listeQuery.data) {
+
+      setListe(
+        listeQuery.data
+      )
+    }
+
+    const conteggioQuery = await supabase
+
+      .from('schede_scrutinate')
+
+      .select('*', {
+        count: 'exact',
+        head: true
+      })
+
+      .eq('seggio_id', sezioneId)
+
+    const totaleSchede =
+
+      conteggioQuery.count || 0
+
+    setSchedeScrutinate(
+      totaleSchede
+    )
+
+    if (
+
+      sezione.totale_votanti > 0 &&
+
+      totaleSchede >=
+      sezione.totale_votanti
+
+    ) {
+
+      setSezioneCompletata(true)
+
+    } else {
+
+      setSezioneCompletata(false)
+    }
+
+    // IMPOSTAZIONI
+
+    const { data: impostazioni } =
+      await supabase
+
+        .from('impostazioni')
+
+        .select(
+          'scrutinio_aperto'
+        )
+
+        .limit(1)
+
+    setScrutinioAperto(
+
+      impostazioni?.[0]
+        ?.scrutinio_aperto ?? true
     )
   }
 
-  // LISTE
+  // =====================================
+  // EFFECT
+  // =====================================
 
-  const listeQuery = await supabase
+  useEffect(() => {
 
-    .from('liste')
+    if (sezioneId === null) return
 
-    .select('*')
+    caricaDati()
 
-    .order('numero')
+    // REALTIME
 
-  if (listeQuery.data) {
+    const channel = supabase
 
-    setListe(
-      listeQuery.data
-    )
-  }
-
-const conteggioQuery = await supabase
-
-  .from('schede_scrutinate')
-
-  .select('*', {
-    count: 'exact',
-    head: true
-  })
-
-  .eq('seggio_id', seggioId)
-
-const totaleSchede =
-
-  conteggioQuery.count || 0
-
-setSchedeScrutinate(
-  totaleSchede
-)
-
-if (
-
-  seggio.totale_votanti > 0 &&
-
-  totaleSchede >=
-  seggio.totale_votanti
-
-) {
-
-  setSeggioCompletato(true)
-
-} else {
-
-  setSeggioCompletato(false)
-}
-
-  // IMPOSTAZIONI
-
-  const { data: impostazioni } =
-    await supabase
-
-      .from('impostazioni')
-
-      .select(
-        'scrutinio_aperto'
+      .channel(
+        'realtime-impostazioni'
       )
 
-      .limit(1)
+      .on(
 
-  setScrutinioAperto(
+        'postgres_changes',
 
-    impostazioni?.[0]
-      ?.scrutinio_aperto ?? true
-  )
-}
+        {
 
-// =====================================
-// EFFECT
-// =====================================
+          event: 'UPDATE',
 
-useEffect(() => {
+          schema: 'public',
 
-  if (seggioId === null) return
+          table: 'impostazioni'
+        },
 
-  caricaDati()
+        (payload) => {
 
-  // REALTIME
+          setScrutinioAperto(
 
-  const channel = supabase
+            payload.new
+              .scrutinio_aperto
+          )
+        }
+      )
 
-    .channel(
-      'realtime-impostazioni'
-    )
+      .subscribe()
 
-    .on(
+    return () => {
 
-      'postgres_changes',
+      supabase.removeChannel(
+        channel
+      )
+    }
 
-      {
-
-        event: 'UPDATE',
-
-        schema: 'public',
-
-        table: 'impostazioni'
-      },
-
-      (payload) => {
-
-        setScrutinioAperto(
-
-          payload.new
-            .scrutinio_aperto
-        )
-      }
-    )
-
-    .subscribe()
-
-  return () => {
-
-    supabase.removeChannel(
-      channel
-    )
-  }
-
-}, [seggioId])
+  }, [sezioneId])
 
   // =====================================
   // LOAD CANDIDATI
@@ -347,23 +347,24 @@ useEffect(() => {
     tipo: 'bianca' | 'nulla'
   ) {
 
-if (seggioCompletato) {
+    if (sezioneCompletata) {
 
-  alert(
-    'Seggio completato'
-  )
+      alert(
+        'Sezione completata'
+      )
 
-  return
-}
+      return
+    }
 
     if (!scrutinioAperto) {
 
-  alert(
-    'Scrutinio chiuso'
-  )
+      alert(
+        'Scrutinio chiuso'
+      )
 
-  return
-}
+      return
+    }
+
     setLoading(true)
 
     const { error } = await supabase
@@ -372,7 +373,7 @@ if (seggioCompletato) {
 
       .insert({
 
-        seggio_id: seggioId,
+        seggio_id: sezioneId,
 
         tipo
       })
@@ -399,23 +400,23 @@ if (seggioCompletato) {
 
   async function salvaScheda() {
 
-    if (seggioCompletato) {
+    if (sezioneCompletata) {
 
-  alert(
-    'Seggio completato'
-  )
+      alert(
+        'Sezione completata'
+      )
 
-  return
-}
+      return
+    }
 
     if (!scrutinioAperto) {
 
-  alert(
-    'Scrutinio chiuso'
-  )
+      alert(
+        'Scrutinio chiuso'
+      )
 
-  return
-}
+      return
+    }
 
     if (!sindacoScelto) return
 
@@ -431,7 +432,7 @@ if (seggioCompletato) {
 
       .insert({
 
-        seggio_id: seggioId,
+        seggio_id: sezioneId,
 
         tipo: 'valida',
 
@@ -540,76 +541,81 @@ if (seggioCompletato) {
   // STEP 1
   // =====================================
 
+  if (sezioneValida === null) {
 
-if (seggioValido === null) {
+    return (
 
-  return (
-
-    <main className="
-      min-h-screen
-      bg-black
-      text-white
-      flex
-      items-center
-      justify-center
-    ">
-
-      <div className="
-        text-4xl
-        font-black
-      ">
-        Caricamento...
-      </div>
-
-    </main>
-  )
-}
-
-if (seggioValido === false) {
-
-  return (
-
-    <main className="
-      min-h-screen
-      bg-black
-      text-white
-      flex
-      items-center
-      justify-center
-      p-6
-    ">
-
-      <div className="
-        text-center
+      <main className="
+        min-h-screen
+        bg-black
+        text-white
+        flex
+        items-center
+        justify-center
       ">
 
-        <h1 className="
-          text-6xl
+        <div className="
+          text-4xl
           font-black
-          mb-6
-          text-red-500
         ">
-          SEGGIO NON VALIDO
-        </h1>
+          Caricamento...
+        </div>
 
-        <p className="
-          text-2xl
-          text-zinc-400
+      </main>
+    )
+  }
+
+  if (sezioneValida === false) {
+
+    return (
+
+      <main className="
+        min-h-screen
+        bg-black
+        text-white
+        flex
+        items-center
+        justify-center
+        p-6
+      ">
+
+        <div className="
+          text-center
         ">
-          Questo seggio non esiste
-        </p>
 
-      </div>
+          <h1 className="
+            text-4xl
+            md:text-6xl
+            font-black
+            mb-6
+            text-red-500
+          ">
+            SEZIONE NON VALIDA
+          </h1>
 
-    </main>
-  )
-}
+          <p className="
+            text-xl
+            md:text-2xl
+            text-zinc-400
+          ">
+            Questa sezione non esiste
+          </p>
+
+        </div>
+
+      </main>
+    )
+  }
+
+  // =====================================
+  // STEP 1 UI
+  // =====================================
 
   if (step === 1) {
 
     return (
 
-      <main className="min-h-screen bg-black text-white p-6">
+      <main className="min-h-screen bg-black text-white p-4 md:p-6">
 
         <div className="max-w-5xl px-2 mx-auto">
 
@@ -621,10 +627,12 @@ if (seggioValido === false) {
               bg-green-600
               text-white
               rounded-3xl
-              p-8
+              p-6
+              md:p-8
               mb-8
               text-center
-              text-3xl
+              text-2xl
+              md:text-3xl
               font-black
             ">
               ✅ SCHEDA SALVATA
@@ -637,34 +645,40 @@ if (seggioValido === false) {
           <div className="mb-12">
 
             <h1 className="
-  text-3xl
-  md:text-7xl
-  font-black
-  mb-3
-">
-              SEGGIO {seggioId}
+              text-3xl
+              md:text-7xl
+              font-black
+              mb-3
+            ">
+              SEZIONE {sezioneId}
             </h1>
-            
-{seggioCompletato && (
 
-  <div className="
-    mt-4
-    inline-block
-    bg-green-600
-    text-white
-    rounded-2xl
-    px-6
-    py-3
-    text-2xl
-    font-black
-  ">
+            {sezioneCompletata && (
 
-    ✅ SEGGIO COMPLETATO
+              <div className="
+                mt-4
+                inline-block
+                bg-green-600
+                text-white
+                rounded-2xl
+                px-6
+                py-3
+                text-xl
+                md:text-2xl
+                font-black
+              ">
 
-  </div>
+                ✅ SEZIONE COMPLETATA
 
-)}
-            <p className="text-zinc-500 text-2xl">
+              </div>
+
+            )}
+
+            <p className="
+              text-zinc-500
+              text-xl
+              md:text-2xl
+            ">
               Seleziona il tipo di scheda
             </p>
 
@@ -700,7 +714,7 @@ if (seggioValido === false) {
                 }}
               >
 
-                <p className="text-xl opacity-80 mb-3">
+                <p className="text-lg md:text-xl opacity-80 mb-3">
                   Candidato Sindaco
                 </p>
 
@@ -717,8 +731,6 @@ if (seggioValido === false) {
           {/* BIANCA / NULLA */}
 
           <div className="grid md:grid-cols-2 gap-6">
-
-            {/* BIANCA */}
 
             <button
 
@@ -740,7 +752,7 @@ if (seggioValido === false) {
               "
             >
 
-              <p className="text-xl opacity-70 mb-3">
+              <p className="text-lg md:text-xl opacity-70 mb-3">
                 Scheda
               </p>
 
@@ -749,8 +761,6 @@ if (seggioValido === false) {
               </h2>
 
             </button>
-
-            {/* NULLA */}
 
             <button
 
@@ -772,7 +782,7 @@ if (seggioValido === false) {
               "
             >
 
-              <p className="text-xl opacity-70 mb-3">
+              <p className="text-lg md:text-xl opacity-70 mb-3">
                 Scheda
               </p>
 
@@ -786,39 +796,40 @@ if (seggioValido === false) {
 
         </div>
 
-{/* STATO SCRUTINIO */}
+        {/* STATO SCRUTINIO */}
 
-<div className="mt-8">
+        <div className="mt-8">
 
-  <div
+          <div
 
-    className={`
-      w-full
-      rounded-3xl
-      p-6
-      text-center
-      text-3xl
-      font-black
+            className={`
+              w-full
+              rounded-3xl
+              p-6
+              text-center
+              text-xl
+              md:text-3xl
+              font-black
 
-      ${scrutinioAperto
+              ${scrutinioAperto
 
-        ? 'bg-green-600 text-white'
+                ? 'bg-green-600 text-white'
 
-        : 'bg-red-600 text-white'
-      }
-    `}
-  >
+                : 'bg-red-600 text-white'
+              }
+            `}
+          >
 
-    {scrutinioAperto
+            {scrutinioAperto
 
-      ? '🟢 SCRUTINIO APERTO'
+              ? '🟢 SCRUTINIO APERTO'
 
-      : '🔴 SCRUTINIO CHIUSO'
-    }
+              : '🔴 SCRUTINIO CHIUSO'
+            }
 
-  </div>
+          </div>
 
-</div>
+        </div>
 
       </main>
     )
@@ -832,7 +843,7 @@ if (seggioValido === false) {
 
     return (
 
-      <main className="min-h-screen bg-black text-white p-6">
+      <main className="min-h-screen bg-black text-white p-4 md:p-6">
 
         <div className="max-w-5xl px-2 mx-auto">
 
@@ -842,7 +853,7 @@ if (seggioValido === false) {
 
             className="
               rounded-3xl
-              p-6
+              p-5 md:p-6
               mb-10
             "
 
@@ -851,15 +862,15 @@ if (seggioValido === false) {
             }}
           >
 
-            <p className="text-lg opacity-80 mb-2">
+            <p className="text-base md:text-lg opacity-80 mb-2">
               Sindaco selezionato
             </p>
 
             <h1 className="
-  text-3xl
-  md:text-5xl
-  font-black
-">
+              text-3xl
+              md:text-5xl
+              font-black
+            ">
               {sindacoScelto?.nome}
             </h1>
 
@@ -906,7 +917,8 @@ if (seggioValido === false) {
                 >
 
                   <p className="
-                    text-2xl
+                    text-xl
+                    md:text-2xl
                     opacity-80
                     mb-4
                     font-bold
@@ -915,7 +927,8 @@ if (seggioValido === false) {
                   </p>
 
                   <h2 className="
-                    text-2xl md:text-5xl
+                    text-2xl
+                    md:text-5xl
                     font-black
                     leading-tight
                     mb-6
@@ -926,7 +939,8 @@ if (seggioValido === false) {
                   {selezionata && (
 
                     <div className="
-                      text-2xl
+                      text-xl
+                      md:text-2xl
                       font-black
                     ">
                       ✅ SELEZIONATA
@@ -943,11 +957,11 @@ if (seggioValido === false) {
           {/* FOOTER */}
 
           <div className="
-  flex
-  flex-col
-  md:flex-row
-  gap-4
-">
+            flex
+            flex-col
+            md:flex-row
+            gap-4
+          ">
 
             <button
 
@@ -958,8 +972,9 @@ if (seggioValido === false) {
                 bg-orange-500
                 text-white
                 rounded-3xl
-                p-6
-                text-3xl
+                p-5 md:p-6
+                text-2xl
+                md:text-3xl
                 font-black
               "
             >
@@ -984,8 +999,9 @@ if (seggioValido === false) {
                 bg-green-600
                 text-white
                 rounded-3xl
-                p-6
-                text-3xl
+                p-5 md:p-6
+                text-2xl
+                md:text-3xl
                 font-black
                 disabled:opacity-40
               "
@@ -1007,7 +1023,7 @@ if (seggioValido === false) {
 
   return (
 
-    <main className="min-h-screen bg-black text-white p-6">
+    <main className="min-h-screen bg-black text-white p-4 md:p-6">
 
       <div className="max-w-5xl px-2 mx-auto">
 
@@ -1017,7 +1033,7 @@ if (seggioValido === false) {
 
           className="
             rounded-3xl
-            p-3 md:p-6
+            p-4 md:p-6
             mb-6
           "
 
@@ -1026,7 +1042,7 @@ if (seggioValido === false) {
           }}
         >
 
-          <p className="text-lg opacity-80 mb-2">
+          <p className="text-base md:text-lg opacity-80 mb-2">
             Lista selezionata
           </p>
 
@@ -1039,14 +1055,12 @@ if (seggioValido === false) {
         {/* TOP ACTIONS */}
 
         <div className="
-  flex
-  flex-col
-  md:flex-row
-  gap-4
-  mb-8
-">
-
-          {/* TORNA STEP 2 */}
+          flex
+          flex-col
+          md:flex-row
+          gap-4
+          mb-8
+        ">
 
           <button
 
@@ -1063,14 +1077,13 @@ if (seggioValido === false) {
               text-white
               rounded-3xl
               p-5
-              text-2xl
+              text-xl
+              md:text-2xl
               font-black
             "
           >
             ANNULLA
           </button>
-
-          {/* CONFERMA */}
 
           <button
 
@@ -1084,7 +1097,8 @@ if (seggioValido === false) {
               text-white
               rounded-3xl
               p-5
-              text-2xl
+              text-xl
+              md:text-2xl
               font-black
               disabled:opacity-40
             "
@@ -1103,9 +1117,10 @@ if (seggioValido === false) {
           <div className="
             bg-red-600
             rounded-3xl
-            p-6
+            p-5 md:p-6
             mb-8
-            text-2xl
+            text-xl
+            md:text-2xl
             font-black
           ">
             Le due preferenze devono
@@ -1144,7 +1159,7 @@ if (seggioValido === false) {
 
                 className="
                   rounded-3xl
-                  p-6
+                  p-5 md:p-6
                   text-left
                   transition-all
                   border-4
@@ -1176,7 +1191,8 @@ if (seggioValido === false) {
                   <div>
 
                     <p className="
-                      text-lg
+                      text-base
+                      md:text-lg
                       opacity-70
                       mb-2
                     ">
@@ -1186,7 +1202,8 @@ if (seggioValido === false) {
                     </p>
 
                     <h2 className="
-                      text-2xl md:text-3xl
+                      text-xl
+                      md:text-3xl
                       font-black
                     ">
                       {candidato.nome}
@@ -1197,7 +1214,8 @@ if (seggioValido === false) {
                   {selezionato && (
 
                     <div className="
-                      text-3xl
+                      text-2xl
+                      md:text-3xl
                       font-black
                     ">
                       ✅
@@ -1228,8 +1246,9 @@ if (seggioValido === false) {
               bg-green-600
               text-white
               rounded-3xl
-              p-6
-              text-3xl
+              p-5 md:p-6
+              text-2xl
+              md:text-3xl
               font-black
               disabled:opacity-40
             "
@@ -1253,7 +1272,8 @@ if (seggioValido === false) {
             text-white
             rounded-3xl
             p-5
-            text-2xl
+            text-xl
+            md:text-2xl
             font-black
           "
         >

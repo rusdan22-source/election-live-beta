@@ -43,7 +43,7 @@ export default function LivePage() {
   const [preferenze, setPreferenze] =
     useState<any[]>([])
 
-  const [seggi, setSeggi] =
+  const [sezioni, setSezioni] =
     useState<any[]>([])
 
   const [totaliSchede, setTotaliSchede] =
@@ -99,7 +99,7 @@ export default function LivePage() {
 
       .select(`
         *,
-        seggio:seggio_id (
+        sezione:seggio_id (
           nome
         ),
         preferenze_scheda (
@@ -168,36 +168,36 @@ export default function LivePage() {
       lista2
     })
 
-    const seggiQuery = await supabase
+    const sezioniQuery = await supabase
 
       .from('seggi')
 
       .select('*')
 
-    const seggiData =
-      seggiQuery.data || []
+    const sezioniData =
+      sezioniQuery.data || []
 
-    const seggiStats = seggiData.map(
-      (seggio: any) => {
+    const sezioniStats = sezioniData.map(
+      (sezione: any) => {
 
         const scrutinate = schede.filter(
-          (s) => s.seggio_id === seggio.id
+          (s) => s.seggio_id === sezione.id
         ).length
 
         const percentuale =
 
-          seggio.totale_votanti > 0
+          sezione.totale_votanti > 0
 
-          ? (
-              scrutinate /
-              seggio.totale_votanti
-            ) * 100
+            ? (
+                scrutinate /
+                sezione.totale_votanti
+              ) * 100
 
-          : 0
+            : 0
 
         return {
 
-          ...seggio,
+          ...sezione,
 
           scrutinate,
 
@@ -206,7 +206,7 @@ export default function LivePage() {
       }
     )
 
-    setSeggi(seggiStats)
+    setSezioni(sezioniStats)
 
     const candidatiQuery = await supabase
 
@@ -266,17 +266,17 @@ export default function LivePage() {
 
       Object.values(map)
 
-      .sort((a: any, b: any) => {
+        .sort((a: any, b: any) => {
 
-        if (b.voti !== a.voti) {
+          if (b.voti !== a.voti) {
 
-          return b.voti - a.voti
-        }
+            return b.voti - a.voti
+          }
 
-        return a.nome.localeCompare(
-          b.nome
-        )
-      })
+          return a.nome.localeCompare(
+            b.nome
+          )
+        })
 
     setPreferenze(classifica)
   }
@@ -389,29 +389,31 @@ export default function LivePage() {
   const lista2 = preferenze.filter(
     (p) => p.lista_id === 2
   )
-function percentuale(
-  voti: number
-) {
 
-  if (!totali.valide)
-    return '0.0'
+  function percentuale(
+    voti: number
+  ) {
 
-  return (
+    if (!totali.valide)
+      return '0.0'
 
-    (
-      voti /
-      totali.valide
-    ) * 100
+    return (
 
-  ).toFixed(1)
-}
+      (
+        voti /
+        totali.valide
+      ) * 100
+
+    ).toFixed(1)
+  }
+
   return (
 
     <main className="
       h-screen
       bg-black
       text-white
-      p-6
+      p-4 md:p-6
       overflow-hidden
       select-none
     ">
@@ -422,7 +424,7 @@ function percentuale(
         bg-zinc-800
         rounded-full
         overflow-hidden
-        mb-6
+        mb-4 md:mb-6
       ">
 
         <div
@@ -445,7 +447,7 @@ function percentuale(
 
           totali={totali}
 
-          seggi={seggi}
+          seggi={sezioni}
 
           totaliSchede={totaliSchede}
 
@@ -459,7 +461,6 @@ function percentuale(
         <ClassificaSlide
           titolo="PREFERENZE — LISTA 1 - Polizzi Futura"
           totale={`
-
 ${totali.lista1} voti
 • ${percentuale(
   totali.lista1
@@ -475,8 +476,7 @@ ${totali.lista1} voti
 
         <ClassificaSlide
           titolo="PREFERENZE — LISTA 2 - Costruire Comunità"
-totale={`
-
+          totale={`
 ${totali.lista2} voti
 • ${percentuale(
   totali.lista2

@@ -29,58 +29,72 @@ export default function ClassificaSlide({
   const right =
     data.slice(5, 10)
 
+  const totalePreferenze =
+
+    titolo ===
+    'TOTALE PREFERENZE'
+
   return (
 
     <div>
 
+      {/* TITOLO */}
+
       <h1
 
         className="
-          text-5xl
+          text-4xl
           xl:text-6xl
           font-black
           mb-2
+          leading-tight
         "
 
         style={{
 
-  color:
+          color:
 
-    titolo === 'TOTALE PREFERENZE'
+            totalePreferenze
 
-      ? '#F97316'
+              ? '#F97316'
 
-      : colore
-}}
+              : colore
+        }}
       >
         {titolo}
       </h1>
+
+      {/* TOTALE */}
 
       <div
 
         className="
           inline-block
+          items-center
           rounded-2xl
           px-5
           py-3
-          text-2xl
+          text-xl
+          xl:text-2xl
           font-black
           mb-6
         "
 
-style={{
+        style={{
 
-  background:
+          background:
 
-    titolo === 'TOTALE PREFERENZE'
+            totalePreferenze
 
-      ? '#F97316'
+              ? '#F97316'
 
-      : colore
-}}
+              : colore
+        }}
       >
         {totale}
       </div>
+
+      {/* GRID */}
 
       <div className="
         grid
@@ -88,45 +102,73 @@ style={{
         gap-3
       ">
 
-        <div className="grid gap-3">
+        {/* SINISTRA */}
+
+        <div className="
+          grid
+          gap-3
+        ">
 
           {left.map(
             (candidato: any, index: number) => (
 
               <RankingCard
-  key={candidato.id}
-  candidato={candidato}
 
-  colore={
-    candidato.lista_id === 1
-      ? '#14532D'
-      : '#991B1B'
-  }
+                key={candidato.id}
 
-  index={index + 1}
-/>
+                candidato={candidato}
+
+                colore={
+
+                  totalePreferenze
+
+                    ? candidato.lista_id === 1
+
+                      ? '#14532D'
+
+                      : '#991B1B'
+
+                    : colore
+                }
+
+                index={index + 1}
+              />
             )
           )}
 
         </div>
 
-        <div className="grid gap-3">
+        {/* DESTRA */}
+
+        <div className="
+          grid
+          gap-3
+        ">
 
           {right.map(
             (candidato: any, index: number) => (
 
               <RankingCard
-  key={candidato.id}
-  candidato={candidato}
 
-  colore={
-    candidato.lista_id === 1
-      ? '#14532D'
-      : '#991B1B'
-  }
+                key={candidato.id}
 
-  index={index + 6}
-/>
+                candidato={candidato}
+
+                colore={
+
+                  totalePreferenze
+
+                    ? candidato.lista_id === 1
+
+                      ? '#14532D'
+
+                      : '#991B1B'
+
+                    : colore
+                }
+
+                index={index + 6}
+              />
             )
           )}
 

@@ -21,7 +21,7 @@ export default function LiveControls({
 
     <div className="
       fixed
-      bottom-6
+      bottom-4
       left-1/2
       -translate-x-1/2
       flex
@@ -29,6 +29,8 @@ export default function LiveControls({
       gap-3
       z-50
     ">
+
+      {/* PREV */}
 
       <button
 
@@ -44,15 +46,22 @@ export default function LiveControls({
 
         className="
           bg-zinc-800
+          hover:bg-zinc-700
           rounded-2xl
-          px-6
-          py-4
-          text-3xl
+          px-5
+          md:px-6
+          py-3
+          md:py-4
+          text-2xl
+          md:text-3xl
           font-black
+          transition-all
         "
       >
         ⬅️
       </button>
+
+      {/* PLAY / PAUSE */}
 
       <button
 
@@ -63,16 +72,20 @@ export default function LiveControls({
 
         className={`
           rounded-2xl
-          px-8
-          py-4
-          text-3xl
+          px-7
+          md:px-8
+          py-3
+          md:py-4
+          text-2xl
+          md:text-3xl
           font-black
+          transition-all
 
           ${autoPlay
 
-            ? 'bg-green-600'
+            ? 'bg-green-600 hover:bg-green-500'
 
-            : 'bg-red-600'
+            : 'bg-red-600 hover:bg-red-500'
           }
         `}
       >
@@ -80,6 +93,8 @@ export default function LiveControls({
           ? '⏸️'
           : '▶️'}
       </button>
+
+      {/* NEXT */}
 
       <button
 
@@ -93,11 +108,16 @@ export default function LiveControls({
 
         className="
           bg-zinc-800
+          hover:bg-zinc-700
           rounded-2xl
-          px-6
-          py-4
-          text-3xl
+          px-5
+          md:px-6
+          py-3
+          md:py-4
+          text-2xl
+          md:text-3xl
           font-black
+          transition-all
         "
       >
         ➡️
