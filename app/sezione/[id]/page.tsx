@@ -101,15 +101,6 @@ export default function SezionePage() {
 
     setSezioneId(Number(id))
 
-    useEffect(() => {
-
-  if (!sezioneId) return
-
-  document.title =
-    `Sezione ${sezioneId} | Election Live`
-
-}, [sezioneId])
-
   }, [])
 
   // =====================================
