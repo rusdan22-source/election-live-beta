@@ -21,7 +21,7 @@ export default function LiveControls({
 
     <div className="
       fixed
-      bottom-4
+      bottom-3
       left-1/2
       -translate-x-1/2
       flex

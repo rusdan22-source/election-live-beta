@@ -318,7 +318,7 @@ export default function LivePageSlide({
             grid
             grid-cols-4
             gap-3
-            mb-3
+            mb-4
           ">
 
             <Card
@@ -354,7 +354,8 @@ export default function LivePageSlide({
             grid
             grid-cols-2
             gap-3
-            mb-3
+            h-41
+            mb-4
           ">
 
             <Card
@@ -403,7 +404,7 @@ export default function LivePageSlide({
             grid
             grid-cols-4
             gap-3
-            mb-3
+            mb-4
           ">
 
             {seggi.map((sezione: any) => {
@@ -601,7 +602,7 @@ export default function LivePageSlide({
           rounded-3xl
           p-4
           overflow-hidden
-          h-[672px]
+          h-[688px]
         ">
 
           <div className="
