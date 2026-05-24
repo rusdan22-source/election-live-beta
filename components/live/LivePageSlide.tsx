@@ -635,187 +635,279 @@ export default function LivePageSlide({
           ">
 
             {ultimeSchede
-              .slice(0, 8)
-              .map(
-                (scheda: any) => {
+  .slice(0, 8)
+  .map(
+    (scheda: any) => {
 
-                  let sindaco = ''
+      const orario =
+        new Date(
+          scheda.created_at
+        ).toLocaleTimeString('it-IT')
 
-                  if (scheda.tipo === 'bianca') {
-                    sindaco = 'SCHEDA BIANCA'
-                  }
+      // =====================================
+      // BIANCA
+      // =====================================
 
-                  else if (scheda.tipo === 'nulla') {
-                    sindaco = 'SCHEDA NULLA'
-                  }
+      if (scheda.tipo === 'bianca') {
 
-                  else if (
-                    scheda.sindaco_id === 1
-                  ) {
-                    sindaco = 'LO VERDE'
-                  }
+        return (
 
-                  else {
-                    sindaco = 'LIBRIZZI'
-                  }
+          <div
 
-                  const listaNome =
-                    scheda.lista_id === 1
-                      ? 'Polizzi Futura'
-                      : 'Costruire Comunità'
+            key={scheda.id}
 
-                  const preferenze =
+            className="
+              rounded-2xl
+              p-3
+              bg-white
+              text-black
+            "
+          >
 
-                    scheda.preferenze_scheda
-                      ?.map((p: any) =>
+            <div className="
+              flex
+              items-center
+              justify-between
+              mb-2
+            ">
 
-                        p.candidato?.nome
-                      )
+              <div className="
+                text-xs
+                font-black
+                opacity-70
+              ">
+                Sezione {scheda.seggio_id}
+              </div>
 
-                      .filter(Boolean)
+              <div className="
+                text-[10px]
+                opacity-70
+              ">
+                {orario}
+              </div>
 
-                      .join(' • ')
+            </div>
 
-                  return (
+            <div className="
+              text-sm
+              font-black
+            ">
+              SCHEDA BIANCA
+            </div>
 
-                    <div
+          </div>
+        )
+      }
 
-                      key={scheda.id}
+      // =====================================
+      // NULLA
+      // =====================================
 
-                      className="
-                        rounded-2xl
-                        overflow-hidden
-                        flex
-                      "
-                    >
+      if (scheda.tipo === 'nulla') {
 
-                      <div
+        return (
 
-                        className="
-                          w-1/2
-                          p-3
-                        "
+          <div
 
-                        style={{
+            key={scheda.id}
 
-                          background:
+            className="
+            rounded-2xl
+            p-3
+            text-white
+            "
 
-                            scheda.sindaco_id === 1
+            style={{
+              background: '#3F3F46'
+                  }}
+          >
 
-                              ? '#14532D'
+            <div className="
+              flex
+              items-center
+              justify-between
+              mb-2
+            ">
 
-                              : scheda.sindaco_id === 2
+              <div className="
+                text-xs
+                font-black
+                opacity-70
+              ">
+                Sezione {scheda.seggio_id}
+              </div>
 
-                                ? '#991B1B'
+              <div className="
+                text-[10px]
+                opacity-70
+              ">
+                {orario}
+              </div>
 
-                                : '#3F3F46'
-                        }}
-                      >
+            </div>
 
-                        <div className="
-                          flex
-                          items-center
-                          justify-between
-                          mb-2
-                        ">
+            <div className="
+              text-sm
+              font-black
+            ">
+              SCHEDA NULLA
+            </div>
 
-                          <div className="
-                            font-black
-                            text-xs
-                          ">
-                            Sezione {scheda.seggio_id}
-                          </div>
+          </div>
+        )
+      }
 
-                          <div className="
-                            text-[10px]
-                            opacity-70
-                          ">
-                            {new Date(
-                              scheda.created_at
-                            ).toLocaleTimeString('it-IT')}
-                          </div>
+      // =====================================
+      // VALIDA
+      // =====================================
 
-                        </div>
+      const sindaco =
 
-                        <div className="
-                          font-black
-                          text-sm
-                        ">
-                          {sindaco}
-                        </div>
+        scheda.sindaco_id === 1
 
-                      </div>
+          ? 'LO VERDE'
 
-                      <div
+          : 'LIBRIZZI'
 
-                        className="
-                          w-1/2
-                          p-3
-                          flex
-                          items-center
-                        "
+      const listaNome =
+        scheda.lista_id === 1
+          ? 'Polizzi Futura'
+          : 'Costruire Comunità'
 
-                        style={{
+      const preferenze =
 
-                          background:
+        scheda.preferenze_scheda
+          ?.map((p: any) =>
 
-                            scheda.lista_id === 1
+            p.candidato?.nome
+          )
 
-                              ? '#14532D'
+          .filter(Boolean)
 
-                              : scheda.lista_id === 2
+          .join(' • ')
 
-                                ? '#991B1B'
+      return (
 
-                                : '#27272A'
-                        }}
-                      >
+        <div
 
-                        <div className="
-                          text-xs
-                          font-bold
-                          leading-snug
-                          -mt-1
-                        ">
+          key={scheda.id}
 
-                          {scheda.tipo === 'valida' && (
+          className="
+            rounded-2xl
+            overflow-hidden
+            flex
+          "
+        >
 
-                            <div>
+          <div
 
-                              <div className="
-                                mb-1
-                              ">
+            className="
+              w-1/2
+              p-3
+            "
 
-                                Lista {scheda.lista_id}
+            style={{
 
-                                {' — '}
+              background:
 
-                                {listaNome}
+                scheda.sindaco_id === 1
 
-                              </div>
+                  ? '#14532D'
 
-                              {preferenze && (
+                  : '#991B1B'
+            }}
+          >
 
-                                <div className="
-                                  opacity-90
-                                ">
-                                  {preferenze}
-                                </div>
+            <div className="
+              flex
+              items-center
+              justify-between
+              mb-2
+            ">
 
-                              )}
+              <div className="
+                font-black
+                text-xs
+              ">
+                Sezione {scheda.seggio_id}
+              </div>
 
-                            </div>
+              <div className="
+                text-[10px]
+                opacity-70
+              ">
+                {orario}
+              </div>
 
-                          )}
+            </div>
 
-                        </div>
+            <div className="
+              font-black
+              text-sm
+            ">
+              {sindaco}
+            </div>
 
-                      </div>
+          </div>
 
-                    </div>
-                  )
-                }
+          <div
+
+            className="
+              w-1/2
+              p-3
+              flex
+              items-center
+            "
+
+            style={{
+
+              background:
+
+                scheda.lista_id === 1
+
+                  ? '#14532D'
+
+                  : '#991B1B'
+            }}
+          >
+
+            <div className="
+              text-xs
+              font-bold
+              leading-snug
+              -mt-1
+            ">
+
+              <div className="
+                mb-1
+              ">
+
+                Lista {scheda.lista_id}
+
+                {' — '}
+
+                {listaNome}
+
+              </div>
+
+              {preferenze && (
+
+                <div className="
+                  opacity-90
+                ">
+                  {preferenze}
+                </div>
+
               )}
+
+            </div>
+
+          </div>
+
+        </div>
+      )
+    }
+  )}
 
           </div>
 
