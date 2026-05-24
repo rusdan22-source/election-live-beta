@@ -28,9 +28,8 @@ type Candidato = {
   lista_id: number
 }
 
-// =====================================
-// PAGE
-// =====================================
+
+
 
 export default function SezionePage() {
 
@@ -43,6 +42,19 @@ export default function SezionePage() {
 
   const [sezioneValida, setSezioneValida] =
     useState<boolean | null>(null)
+
+// =====================================
+// PAGE
+// =====================================
+
+useEffect(() => {
+
+  if (!sezioneId) return
+
+  document.title =
+    `Sezione ${sezioneId} | Election Live`
+
+}, [sezioneId])
 
   // =====================================
   // STATE
