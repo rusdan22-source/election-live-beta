@@ -33,5 +33,12 @@ export default async function Page(
   const resolvedParams =
     await params
 
+  return (
 
+    <SezioneClient
+      sezioneId={
+        Number(resolvedParams.id)
+      }
+    />
+  )
 }

@@ -32,14 +32,20 @@ type Candidato = {
 // PAGE
 // =====================================
 
-export default function SezionePage() {
+type Props = {
+
+  sezioneId: number
+}
+
+export default function SezioneClient({
+
+  sezioneId
+
+}: Props) {
 
   // =====================================
   // URL PARAM
   // =====================================
-
-  const [sezioneId, setSezioneId] =
-    useState<number | null>(null)
 
   const [sezioneValida, setSezioneValida] =
     useState<boolean | null>(null)
@@ -86,22 +92,6 @@ export default function SezionePage() {
 
   const [sezioneCompletata, setSezioneCompletata] =
     useState(false)
-
-  // =====================================
-  // GET URL PARAM
-  // =====================================
-
-  useEffect(() => {
-
-    const path =
-      window.location.pathname
-
-    const id =
-      path.split('/').pop()
-
-    setSezioneId(Number(id))
-
-  }, [])
 
   // =====================================
   // LOAD DATA
