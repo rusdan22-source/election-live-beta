@@ -632,7 +632,7 @@ export default function SezioneClient({
 
           {/* HEADER */}
 
-          <div className="mb-12">
+          <div className="mb-6 md:mb-12">
 
             <h1 className="
               text-3xl
