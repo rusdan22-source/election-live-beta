@@ -105,11 +105,19 @@ setPreScrutinio(
     ?.modalita_pre_scrutinio ?? true
 )
 
-    const schedeQuery = await supabase
+const schedeQuery = await supabase
 
-      .from('schede_scrutinate')
+  .from('schede_scrutinate')
 
-      .select('*')
+  .select(`
+    id,
+    tipo,
+    sindaco_id,
+    lista_id,
+    seggio_id
+  `)
+
+  .range(0, 5000)
 
     const schede =
       schedeQuery.data || []
@@ -142,35 +150,35 @@ setPreScrutinio(
       ultimeQuery.data || []
     )
 
-    const totale = schede.length
+const totale = schede.length
 
-    const valide = schede.filter(
-      (s) => s.tipo === 'valida'
-    ).length
+const valide = schede.filter(
+  (s) => s.tipo === 'valida'
+).length
 
-    const bianche = schede.filter(
-      (s) => s.tipo === 'bianca'
-    ).length
+const bianche = schede.filter(
+  (s) => s.tipo === 'bianca'
+).length
 
-    const nulle = schede.filter(
-      (s) => s.tipo === 'nulla'
-    ).length
+const nulle = schede.filter(
+  (s) => s.tipo === 'nulla'
+).length
 
-    const loverde = schede.filter(
-      (s) => s.sindaco_id === 1
-    ).length
+const loverde = schede.filter(
+  (s) => s.sindaco_id === 1
+).length
 
-    const librizzi = schede.filter(
-      (s) => s.sindaco_id === 2
-    ).length
+const librizzi = schede.filter(
+  (s) => s.sindaco_id === 2
+).length
 
-    const lista1 = schede.filter(
-      (s) => s.lista_id === 1
-    ).length
+const lista1 = schede.filter(
+  (s) => s.lista_id === 1
+).length
 
-    const lista2 = schede.filter(
-      (s) => s.lista_id === 2
-    ).length
+const lista2 = schede.filter(
+  (s) => s.lista_id === 2
+).length
 
     setTotali({
 
@@ -327,10 +335,20 @@ setPreScrutinio(
           
         },
 
-        () => {
+       () => {
 
-          caricaDati()
-        }
+  clearTimeout(
+    (window as any).__liveTimeout
+  )
+
+  ;(window as any).__liveTimeout =
+
+    setTimeout(() => {
+
+      caricaDati()
+
+    }, 250)
+}
       )
 
 .on(
@@ -348,8 +366,18 @@ setPreScrutinio(
 
   () => {
 
-    caricaDati()
-  }
+  clearTimeout(
+    (window as any).__liveTimeout
+  )
+
+  ;(window as any).__liveTimeout =
+
+    setTimeout(() => {
+
+      caricaDati()
+
+    }, 250)
+}
 )
 
       .on(
@@ -367,8 +395,18 @@ setPreScrutinio(
 
         () => {
 
-          caricaDati()
-        }
+  clearTimeout(
+    (window as any).__liveTimeout
+  )
+
+  ;(window as any).__liveTimeout =
+
+    setTimeout(() => {
+
+      caricaDati()
+
+    }, 250)
+}
       )
 
       .subscribe()
