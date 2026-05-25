@@ -773,12 +773,6 @@ ${totali.lista2} voti
           ogni errore umano può influenzare
           i risultati visualizzati.
         </p>
-
-        <p>
-          Beta version —
-          piattaforma sperimentale.
-        </p>
-
       </div>
 
       {/* FOOTER */}
@@ -789,9 +783,10 @@ ${totali.lista2} voti
         text-lg
         font-bold
       ">
-
+<p>
         ElectionLive • Polizzi Generosa 2026
-
+</p>
+<p>Beta version — Piattaforma sperimentale realizzata da Daniele Russo.</p>
       </div>
 
     </div>
