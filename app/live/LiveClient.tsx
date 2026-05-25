@@ -670,7 +670,7 @@ ${totali.lista2} voti
 
         <ClassificaSlide
           titolo="TOTALE PREFERENZE"
-          totale={`Totale preferenze: ${preferenze.length}`}
+          totale={`Totale preferenze: ${totali.lista2 + totali.lista1} voti`}
           colore="#27272A"
           data={preferenze}
         />
