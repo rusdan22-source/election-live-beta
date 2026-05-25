@@ -77,10 +77,10 @@ export default function LivePage() {
     })
 
   const durations = [
-    20000,
-    10000,
-    10000,
-    10000,
+    30000,
+    15000,
+    15000,
+    15000,
     5000
   ]
 
