@@ -407,151 +407,184 @@ export default function LivePageSlide({
             mb-4
           ">
 
-            {seggi.map((sezione: any) => {
+{seggi.map((sezione: any, index: number) => {
 
-              const schedeSezione =
+  const sezioneId =
 
-                totaliSchede.filter(
-                  (s: any) =>
-                    s.seggio_id === sezione.id
-                )
+    sezione.id ??
+    sezione.seggio_id ??
+    index + 1
 
-              const votiLoVerde =
+  const totaleVotanti =
 
-                schedeSezione.filter(
-                  (s: any) =>
-                    s.sindaco_id === 1
-                ).length
+    sezione.totale_votanti ??
 
-              const votiLibrizzi =
+    sezione.totale ??
 
-                schedeSezione.filter(
-                  (s: any) =>
-                    s.sindaco_id === 2
-                ).length
+    sezione.votanti ??
 
-              const verdeVince =
-                votiLoVerde >= votiLibrizzi
+    0
 
-              const colore =
-                verdeVince
-                  ? '#14532D'
-                  : '#991B1B'
+  const schedeSezione =
 
-              const leader =
-                verdeVince
-                  ? 'LO VERDE'
-                  : 'LIBRIZZI'
+    totaliSchede.filter(
+      (s: any) =>
 
-              return (
+        Number(s.seggio_id) === Number(sezioneId)
+    )
 
-                <div
+  const scrutinate =
+    schedeSezione.length
 
-                  key={sezione.id}
+  const percentuale =
 
-                  className="
-                    rounded-3xl
-                    p-4
-                    border-2
-                  "
+    totaleVotanti > 0
 
-                  style={{
-                    borderColor: colore,
-                    background: '#111111'
-                  }}
-                >
+      ? (
+          scrutinate /
+          totaleVotanti
+        ) * 100
 
-                  <div className="
-                    flex
-                    items-center
-                    justify-between
-                    mb-2
-                  ">
+      : 0
 
-                    <h2 className="
-                      text-lg
-                      font-black
-                    ">
-                      Sezione {sezione.id}
-                    </h2>
+  const votiLoVerde =
 
-                    <div className="
-                      text-sm
-                      font-black
-                    ">
-                      {sezione.scrutinate}
-                      /
-                      {sezione.totale_votanti}
-                    </div>
+    schedeSezione.filter(
+      (s: any) =>
 
-                  </div>
+        s.sindaco_id === 1
+    ).length
 
-                  <div className="
-                    w-full
-                    h-3
-                    bg-black/40
-                    rounded-full
-                    overflow-hidden
-                    mb-2
-                  ">
+  const votiLibrizzi =
 
-                    <div
+    schedeSezione.filter(
+      (s: any) =>
 
-                      className="
-                        h-full
-                        rounded-full
-                      "
+        s.sindaco_id === 2
+    ).length
 
-                      style={{
-                        width: `${sezione.percentuale}%`,
-                        background: colore
-                      }}
-                    />
+  const verdeVince =
+    votiLoVerde >= votiLibrizzi
 
-                  </div>
+  const colore =
+    verdeVince
+      ? '#14532D'
+      : '#991B1B'
 
-                  <div className="
-                    flex
-                    items-center
-                    justify-between
-                  ">
+  const leader =
+    verdeVince
+      ? 'LO VERDE'
+      : 'LIBRIZZI'
 
-                    <div
+  return (
 
-                      className="
-                        text-lg
-                        font-black
-                      "
+    <div
 
-                      style={{
-                        color: colore
-                      }}
-                    >
-                      {sezione.percentuale.toFixed(1)}%
-                    </div>
+      key={`sezione-${sezioneId}`}
 
-                    <div
+      className="
+        rounded-3xl
+        p-4
+        border-2
+      "
 
-                      className="
-                        px-2
-                        py-1
-                        rounded-xl
-                        text-xs
-                        font-black
-                      "
+      style={{
+        borderColor: colore,
+        background: '#111111'
+      }}
+    >
 
-                      style={{
-                        background: colore
-                      }}
-                    >
-                      {leader}
-                    </div>
+      <div className="
+        flex
+        items-center
+        justify-between
+        mb-2
+      ">
 
-                  </div>
+        <h2 className="
+          text-lg
+          font-black
+        ">
+          Sezione {sezioneId}
+        </h2>
 
-                </div>
-              )
-            })}
+        <div className="
+          text-sm
+          font-black
+        ">
+          {scrutinate}
+          /
+          {totaleVotanti}
+        </div>
+
+      </div>
+
+      <div className="
+        w-full
+        h-3
+        bg-black/40
+        rounded-full
+        overflow-hidden
+        mb-2
+      ">
+
+        <div
+
+          className="
+            h-full
+            rounded-full
+          "
+
+          style={{
+            width: `${percentuale}%`,
+            background: colore
+          }}
+        />
+
+      </div>
+
+      <div className="
+        flex
+        items-center
+        justify-between
+      ">
+
+        <div
+
+          className="
+            text-lg
+            font-black
+          "
+
+          style={{
+            color: colore
+          }}
+        >
+          {percentuale.toFixed(1)}%
+        </div>
+
+        <div
+
+          className="
+            px-2
+            py-1
+            rounded-xl
+            text-xs
+            font-black
+          "
+
+          style={{
+            background: colore
+          }}
+        >
+          {leader}
+        </div>
+
+      </div>
+
+    </div>
+  )
+})}
 
           </div>
 
@@ -635,280 +668,286 @@ export default function LivePageSlide({
             -mt-[7px]
           ">
 
-            {ultimeSchede
+{ultimeSchede
   .slice(0, 8)
-  .map(
-    (scheda: any) => {
+  .map((scheda: any, index: number) => {
 
-      const orario =
-        new Date(
-          scheda.created_at
-        ).toLocaleTimeString('it-IT')
+    const orario =
 
-      // =====================================
-      // BIANCA
-      // =====================================
+      new Date(
+        scheda.created_at
+      ).toLocaleTimeString('it-IT')
 
-      if (scheda.tipo === 'bianca') {
+    // =====================================
+    // BIANCA
+    // =====================================
 
-        return (
-
-          <div
-
-            key={scheda.id}
-
-            className="
-              rounded-2xl
-              p-3
-              bg-white
-              text-black
-            "
-          >
-
-            <div className="
-              flex
-              items-center
-              justify-between
-              mb-2
-            ">
-
-              <div className="
-                text-xs
-                font-black
-                opacity-70
-              ">
-                Sezione {scheda.seggio_id}
-              </div>
-
-              <div className="
-                text-[10px]
-                opacity-70
-              ">
-                {orario}
-              </div>
-
-            </div>
-
-            <div className="
-              text-sm
-              font-black
-            ">
-              SCHEDA BIANCA
-            </div>
-
-          </div>
-        )
-      }
-
-      // =====================================
-      // NULLA
-      // =====================================
-
-      if (scheda.tipo === 'nulla') {
-
-        return (
-
-          <div
-
-            key={scheda.id}
-
-            className="
-            rounded-2xl
-            p-3
-            text-white
-            "
-
-            style={{
-              background: '#3F3F46'
-                  }}
-          >
-
-            <div className="
-              flex
-              items-center
-              justify-between
-              mb-2
-            ">
-
-              <div className="
-                text-xs
-                font-black
-                opacity-70
-              ">
-                Sezione {scheda.seggio_id}
-              </div>
-
-              <div className="
-                text-[10px]
-                opacity-70
-              ">
-                {orario}
-              </div>
-
-            </div>
-
-            <div className="
-              text-sm
-              font-black
-            ">
-              SCHEDA NULLA
-            </div>
-
-          </div>
-        )
-      }
-
-      // =====================================
-      // VALIDA
-      // =====================================
-
-      const sindaco =
-
-        scheda.sindaco_id === 1
-
-          ? 'LO VERDE'
-
-          : 'LIBRIZZI'
-
-      const listaNome =
-        scheda.lista_id === 1
-          ? 'Polizzi Futura'
-          : 'Costruire Comunità'
-
-      const preferenze =
-
-        scheda.preferenze_scheda
-          ?.map((p: any) =>
-
-            p.candidato?.nome
-          )
-
-          .filter(Boolean)
-
-          .join(' • ')
+    if (scheda.tipo === 'bianca') {
 
       return (
 
         <div
 
-          key={scheda.id}
+          key={`bianca-${scheda.id}-${index}`}
 
           className="
             rounded-2xl
-            overflow-hidden
-            flex
+            p-3
+            bg-white
+            text-black
           "
         >
 
-          <div
-
-            className="
-              w-1/2
-              p-3
-            "
-
-            style={{
-
-              background:
-
-                scheda.sindaco_id === 1
-
-                  ? '#14532D'
-
-                  : '#991B1B'
-            }}
-          >
+          <div className="
+            flex
+            items-center
+            justify-between
+            mb-2
+          ">
 
             <div className="
-              flex
-              items-center
-              justify-between
-              mb-2
+              text-xs
+              font-black
+              opacity-70
             ">
-
-              <div className="
-                font-black
-                text-xs
-              ">
-                Sezione {scheda.seggio_id}
-              </div>
-
-              <div className="
-                text-[10px]
-                opacity-70
-              ">
-                {orario}
-              </div>
-
+              Sezione {scheda.seggio_id}
             </div>
 
             <div className="
-              font-black
-              text-sm
+              text-[10px]
+              opacity-70
             ">
-              {sindaco}
+              {orario}
             </div>
 
           </div>
 
-          <div
-
-            className="
-              w-1/2
-              p-3
-              flex
-              items-center
-            "
-
-            style={{
-
-              background:
-
-                scheda.lista_id === 1
-
-                  ? '#14532D'
-
-                  : '#991B1B'
-            }}
-          >
-
-            <div className="
-              text-xs
-              font-bold
-              leading-snug
-              -mt-1
-            ">
-
-              <div className="
-                mb-1
-              ">
-
-                Lista {scheda.lista_id}
-
-                {' — '}
-
-                {listaNome}
-
-              </div>
-
-              {preferenze && (
-
-                <div className="
-                  opacity-90
-                ">
-                  {preferenze}
-                </div>
-
-              )}
-
-            </div>
-
+          <div className="
+            text-sm
+            font-black
+          ">
+            SCHEDA BIANCA
           </div>
 
         </div>
       )
     }
-  )}
+
+    // =====================================
+    // NULLA
+    // =====================================
+
+    if (scheda.tipo === 'nulla') {
+
+      return (
+
+        <div
+
+          key={`nulla-${scheda.id}-${index}`}
+
+          className="
+            rounded-2xl
+            p-3
+            text-white
+          "
+
+          style={{
+            background: '#3F3F46'
+          }}
+        >
+
+          <div className="
+            flex
+            items-center
+            justify-between
+            mb-2
+          ">
+
+            <div className="
+              text-xs
+              font-black
+              opacity-70
+            ">
+              Sezione {scheda.seggio_id}
+            </div>
+
+            <div className="
+              text-[10px]
+              opacity-70
+            ">
+              {orario}
+            </div>
+
+          </div>
+
+          <div className="
+            text-sm
+            font-black
+          ">
+            SCHEDA NULLA
+          </div>
+
+        </div>
+      )
+    }
+
+    // =====================================
+    // VALIDA
+    // =====================================
+
+    const sindaco =
+
+      scheda.sindaco_id === 1
+
+        ? 'LO VERDE'
+
+        : 'LIBRIZZI'
+
+    const listaNome =
+
+      scheda.lista_id === 1
+
+        ? 'Polizzi Futura'
+
+        : 'Costruire Comunità'
+
+    const preferenze =
+
+      scheda.preferenze_scheda
+        ?.map((p: any) =>
+
+          p.candidato?.nome
+        )
+
+        .filter(Boolean)
+
+        .join(' • ')
+
+    return (
+
+      <div
+
+        key={`valida-${scheda.id}-${index}`}
+
+        className="
+          rounded-2xl
+          overflow-hidden
+          flex
+        "
+      >
+
+        {/* SINISTRA */}
+
+        <div
+
+          className="
+            w-1/2
+            p-3
+          "
+
+          style={{
+
+            background:
+
+              scheda.sindaco_id === 1
+
+                ? '#14532D'
+
+                : '#991B1B'
+          }}
+        >
+
+          <div className="
+            flex
+            items-center
+            justify-between
+            mb-2
+          ">
+
+            <div className="
+              font-black
+              text-xs
+            ">
+              Sezione {scheda.seggio_id}
+            </div>
+
+            <div className="
+              text-[10px]
+              opacity-70
+            ">
+              {orario}
+            </div>
+
+          </div>
+
+          <div className="
+            font-black
+            text-sm
+          ">
+            {sindaco}
+          </div>
+
+        </div>
+
+        {/* DESTRA */}
+
+        <div
+
+          className="
+            w-1/2
+            p-3
+            flex
+            items-center
+          "
+
+          style={{
+
+            background:
+
+              scheda.lista_id === 1
+
+                ? '#14532D'
+
+                : '#991B1B'
+          }}
+        >
+
+          <div className="
+            text-xs
+            font-bold
+            leading-snug
+            -mt-1
+          ">
+
+            <div className="
+              mb-1
+            ">
+
+              Lista {scheda.lista_id}
+
+              {' — '}
+
+              {listaNome}
+
+            </div>
+
+            {preferenze && (
+
+              <div className="
+                opacity-90
+              ">
+                {preferenze}
+              </div>
+
+            )}
+
+          </div>
+
+        </div>
+
+      </div>
+    )
+  })}
 
           </div>
 

@@ -15,6 +15,9 @@ export default function AdminPage() {
   const [scrutinioAperto, setScrutinioAperto] =
     useState(true)
 
+  const [preScrutinio, setPreScrutinio] =
+    useState(true)
+
   const [ultimaModifica, setUltimaModifica] =
     useState('—')
 
@@ -38,6 +41,12 @@ export default function AdminPage() {
 
         impostazioniQuery.data
           .scrutinio_aperto
+      )
+
+      setPreScrutinio(
+
+        impostazioniQuery.data
+          .modalita_pre_scrutinio
       )
     }
 
@@ -193,6 +202,62 @@ export default function AdminPage() {
   }
 
   // =====================================
+  // TOGGLE PRE-SCRUTINIO
+  // =====================================
+
+  async function togglePreScrutinio() {
+
+    if (preScrutinio) {
+
+      // AVVIA SCRUTINIO
+
+      await supabase
+
+        .from('impostazioni')
+
+        .update({
+
+          modalita_pre_scrutinio:
+            false,
+
+          scrutinio_aperto:
+            true
+        })
+
+        .eq('id', 1)
+
+      setPreScrutinio(false)
+
+      setScrutinioAperto(true)
+
+    } else {
+
+      // TORNA PRE-SCRUTINIO
+
+      await supabase
+
+        .from('impostazioni')
+
+        .update({
+
+          modalita_pre_scrutinio:
+            true,
+
+          scrutinio_aperto:
+            false
+        })
+
+        .eq('id', 1)
+
+      setPreScrutinio(true)
+
+      setScrutinioAperto(false)
+    }
+
+    caricaDati()
+  }
+
+  // =====================================
   // UI
   // =====================================
 
@@ -261,40 +326,80 @@ export default function AdminPage() {
 
       </div>
 
-      {/* STATO */}
+      {/* CONTROLLI LIVE */}
 
       <div className="
+        flex
+        flex-col
+        md:flex-row
+        gap-4
         mb-8
       ">
+
+        {/* PRE-SCRUTINIO / START */}
+
+        <button
+
+          onClick={togglePreScrutinio}
+
+          className={`
+            flex-1
+            rounded-3xl
+            px-8
+            py-5
+            text-xl
+            md:text-2xl
+            font-black
+            transition-all
+
+            ${preScrutinio
+
+              ? 'bg-green-600 hover:bg-green-700'
+
+              : 'bg-orange-500 hover:bg-orange-600'
+            }
+          `}
+        >
+
+          {preScrutinio
+
+            ? '▶ INIZIA SCRUTINIO'
+
+            : '⏸ MODALITÀ PRE-SCRUTINIO'
+          }
+
+        </button>
+
+        {/* SCRUTINIO APERTO / CHIUSO */}
 
         <button
 
           onClick={toggleScrutinio}
 
           className={`
-            w-full
-            md:w-auto
+            flex-1
             rounded-3xl
-            px-6
-            py-4
+            px-8
+            py-5
             text-xl
             md:text-2xl
             font-black
+            transition-all
 
             ${scrutinioAperto
 
-              ? 'bg-green-600'
+              ? 'bg-green-600 hover:bg-green-700'
 
-              : 'bg-red-600'
+              : 'bg-red-600 hover:bg-red-700'
             }
           `}
         >
 
           {scrutinioAperto
 
-            ? 'SCRUTINIO APERTO'
+            ? '🟢 SCRUTINIO APERTO'
 
-            : 'SCRUTINIO CHIUSO'
+            : '🔴 SCRUTINIO CHIUSO'
           }
 
         </button>

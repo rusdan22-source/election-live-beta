@@ -34,6 +34,9 @@ export default function LivePage() {
   const [slide, setSlide] =
     useState(0)
 
+  const [visible, setVisible] =
+    useState(true)
+
   const [progress, setProgress] =
     useState(100)
 
@@ -77,10 +80,30 @@ export default function LivePage() {
     20000,
     10000,
     10000,
-    10000
+    10000,
+    5000
   ]
 
+const [preScrutinio, setPreScrutinio] =
+  useState(true)
+
   async function caricaDati() {
+
+const impostazioniQuery = await supabase
+
+  .from('impostazioni')
+
+  .select(`
+    scrutinio_aperto,
+    modalita_pre_scrutinio
+  `)
+
+  .single()
+
+setPreScrutinio(
+  impostazioniQuery.data
+    ?.modalita_pre_scrutinio ?? true
+)
 
     const schedeQuery = await supabase
 
@@ -300,6 +323,8 @@ export default function LivePage() {
           schema: 'public',
 
           table: 'schede_scrutinate'
+
+          
         },
 
         () => {
@@ -307,6 +332,25 @@ export default function LivePage() {
           caricaDati()
         }
       )
+
+.on(
+
+  'postgres_changes',
+
+  {
+
+    event: '*',
+
+    schema: 'public',
+
+    table: 'impostazioni'
+  },
+
+  () => {
+
+    caricaDati()
+  }
+)
 
       .on(
 
@@ -338,49 +382,66 @@ export default function LivePage() {
 
   useEffect(() => {
 
-    if (!autoPlay) return
+  if (!autoPlay) return
 
-    setProgress(100)
+  setProgress(100)
 
-    const duration =
-      durations[slide]
+  setVisible(true)
 
-    const start = Date.now()
+  const duration =
+    durations[slide]
 
-    const progressTimer = setInterval(() => {
+  const start = Date.now()
 
-      const elapsed =
-        Date.now() - start
+  const progressTimer = setInterval(() => {
 
-      const remaining =
+    const elapsed =
+      Date.now() - start
 
-        100 - (
-          elapsed / duration
-        ) * 100
+    const remaining =
 
-      setProgress(
-        Math.max(remaining, 0)
-      )
+      100 - (
+        elapsed / duration
+      ) * 100
 
-    }, 100)
+    setProgress(
+      Math.max(remaining, 0)
+    )
 
-    const slideTimer = setTimeout(() => {
+  }, 100)
 
-      setSlide((prev) =>
+  // FADE OUT
 
-        (prev + 1) % 4
-      )
+  const fadeTimer = setTimeout(() => {
 
-    }, duration)
+    setVisible(false)
 
-    return () => {
+  }, duration - 700)
 
-      clearTimeout(slideTimer)
+  // NEXT SLIDE
 
-      clearInterval(progressTimer)
-    }
+  const slideTimer = setTimeout(() => {
 
-  }, [slide, autoPlay])
+    setSlide((prev) =>
+
+      (prev + 1) % 5
+    )
+
+    setVisible(true)
+
+  }, duration)
+
+  return () => {
+
+    clearTimeout(slideTimer)
+
+    clearTimeout(fadeTimer)
+
+    clearInterval(progressTimer)
+  }
+
+}, [slide, autoPlay])
+
 
   const lista1 = preferenze.filter(
     (p) => p.lista_id === 1
@@ -406,6 +467,108 @@ export default function LivePage() {
 
     ).toFixed(1)
   }
+
+if (preScrutinio) {
+
+  return (
+
+    <main className="
+      h-screen
+      bg-black
+      flex
+      items-center
+      justify-center
+      overflow-hidden
+      relative
+    ">
+
+     {/* LIVE DOT OVER LOGO */}
+
+<div className="
+  absolute
+  top-[18%]
+  left-198
+  -translate-x-[-235px]
+  -translate-y-1/2
+  z-0
+">
+
+  {/* OUTER PULSE */}
+
+  <div className="
+    absolute
+    w-16
+    h-16
+    rounded-full
+    bg-red-500/25
+    animate-ping
+  " />
+
+  {/* INNER DOT */}
+
+  <div className="
+    relative
+    rounded-full
+    shadow-[0_0_25px_rgba(239,68,68,0.9)]
+  " />
+
+</div>
+      {/* CONTENT */}
+
+      <div className="
+        flex
+        flex-col
+        items-center
+        text-center
+      ">
+
+<img
+
+  src="/logo-electionlive.png"
+
+  alt="Election Live"
+
+  className="
+    relative
+    z-20
+
+    w-[700px]
+    max-w-[90vw]
+
+    animate-[logoPulse_3s_ease-in-out_infinite]
+
+    mb-10
+    select-none
+    pointer-events-none
+  "
+/>
+
+        <h1 className="
+          text-4xl
+          xl:text-6xl
+          font-black
+          text-white
+          mb-4
+          italic
+          uppercase
+        ">
+          Lo scrutinio inizierà a breve
+        </h1>
+
+        <p className="
+          text-zinc-500
+          text-xl
+          xl:text-2xl
+          italic
+        ">
+          Hai giusto il tempo di un caffè...
+        </p>
+
+      </div>
+
+    </main>
+  )
+}
 
   return (
 
@@ -440,6 +603,21 @@ export default function LivePage() {
         />
 
       </div>
+
+<div
+
+  className={`
+    transition-opacity
+    duration-700
+
+    ${visible
+
+      ? 'opacity-100'
+
+      : 'opacity-0'
+    }
+  `}
+>
 
       {slide === 0 && (
 
@@ -499,6 +677,130 @@ ${totali.lista2} voti
 
       )}
 
+      
+{slide === 4 && (
+
+  <div className="
+    h-190
+    flex
+    items-center
+    justify-center
+    px-10
+  ">
+
+    <div className="
+      max-w-7xl
+      rounded-[40px]
+      border
+      border-zinc-800
+      bg-zinc-950
+      p-10
+      text-center
+      shadow-2xl
+    ">
+
+      {/* LIVE BADGE */}
+
+      <div className="
+        inline-flex
+        items-center
+        gap-3
+        bg-red-600/20
+        border
+        border-red-500/40
+        rounded-full
+        px-6
+        py-3
+        mb-8
+      ">
+
+        <div className="
+          w-4
+          h-4
+          rounded-full
+          bg-red-500
+          animate-pulse
+        " />
+
+        <span className="
+          text-4xl
+          font-black
+          tracking-wide
+          text-red-400
+        ">
+          SCRUTINIO LIVE
+        </span>
+
+      </div>
+
+      {/* TITLE */}
+
+      <h1 className="
+        text-4xl
+        xl:text-6xl
+        font-black
+        leading-tight
+        mb-6
+      ">
+
+        Sistema realtime indipendente
+        <br />
+        di monitoraggio elettorale
+
+      </h1>
+
+      {/* TEXT */}
+
+      <div className="
+        text-zinc-300
+        text-xl
+        xl:text-2xl
+        leading-relaxed
+        space-y-5
+      ">
+
+        <p>
+          I dati mostrati sono raccolti
+          e sincronizzati in tempo reale
+          a scopo puramente informativo.
+        </p>
+
+        <p>
+          Le informazioni visualizzate
+          possono differire dai dati
+          ufficiali, la piattaforma è
+          operatore dipendente,
+          ogni errore umano può influenzare
+          i risultati visualizzati.
+        </p>
+
+        <p>
+          Beta version —
+          piattaforma sperimentale.
+        </p>
+
+      </div>
+
+      {/* FOOTER */}
+
+      <div className="
+        mt-10
+        text-zinc-500
+        text-lg
+        font-bold
+      ">
+
+        ElectionLive • Polizzi Generosa 2026
+
+      </div>
+
+    </div>
+
+  </div>
+
+)}
+</div>
+
       <LiveControls
 
         autoPlay={autoPlay}
@@ -506,6 +808,8 @@ ${totali.lista2} voti
         setAutoPlay={setAutoPlay}
 
         setSlide={setSlide}
+
+        setVisible={setVisible}
       />
 
     </main>

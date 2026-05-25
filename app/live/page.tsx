@@ -2,6 +2,10 @@ import type { Metadata } from 'next'
 
 import LiveClient from './LiveClient'
 
+<img
+  src="/logo-electionlive.png"
+/>
+
 export const metadata: Metadata = {
 
   title:

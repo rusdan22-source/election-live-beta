@@ -5,6 +5,8 @@ type Props = {
   setAutoPlay: any
 
   setSlide: any
+
+  setVisible: any
 }
 
 export default function LiveControls({
@@ -13,7 +15,9 @@ export default function LiveControls({
 
   setAutoPlay,
 
-  setSlide
+  setSlide,
+
+  setVisible
 
 }: Props) {
 
@@ -36,13 +40,21 @@ export default function LiveControls({
 
         onClick={() => {
 
-          setSlide((prev: number) =>
+  setVisible(false)
 
-            prev === 0
-              ? 3
-              : prev - 1
-          )
-        }}
+  setTimeout(() => {
+
+    setSlide((prev: number) =>
+
+      prev === 0
+        ? 4
+        : prev - 1
+    )
+
+    setVisible(true)
+
+  }, 300)
+}}
 
         className="
           bg-zinc-800
@@ -100,11 +112,19 @@ export default function LiveControls({
 
         onClick={() => {
 
-          setSlide((prev: number) =>
+  setVisible(false)
 
-            (prev + 1) % 4
-          )
-        }}
+  setTimeout(() => {
+
+    setSlide((prev: number) =>
+
+      (prev + 1) % 5
+    )
+
+    setVisible(true)
+
+  }, 300)
+}}
 
         className="
           bg-zinc-800
